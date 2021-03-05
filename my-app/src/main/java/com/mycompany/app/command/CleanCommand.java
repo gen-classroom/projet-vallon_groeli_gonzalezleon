@@ -14,6 +14,6 @@ public class CleanCommand implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Hello World!");
+        System.out.println("clean");
     }
 }
