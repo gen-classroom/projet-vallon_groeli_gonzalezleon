@@ -1,3 +1,8 @@
+/*
+ * @File CheckSum.java
+ * @Authors : David González León
+ * @Date 5 mars 2021
+ */
 package com.mycompany.app;
 
 import picocli.CommandLine;
