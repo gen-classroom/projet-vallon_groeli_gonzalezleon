@@ -7,7 +7,7 @@ package ch.heigvd.VallonGroeliGonzalezLeon.statique;
 
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.BuildCommand;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.CleanCommand;
-import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.NewCommand;
+import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.Init;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.ServeCommand;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
@@ -22,7 +22,7 @@ import java.util.concurrent.Callable;
 
 @Command(name = "checksum", mixinStandardHelpOptions = true, version = "checksum 4.0",
          description = "Prints the checksum (MD5 by default) of a file to STDOUT.",
-         subcommands = {BuildCommand.class, CleanCommand.class, NewCommand.class, ServeCommand.class})
+         subcommands = {BuildCommand.class, CleanCommand.class, Init.class, ServeCommand.class})
 class CheckSum implements Callable<Integer> {
 
    @Parameters(index = "0", description = "The file whose checksum to calculate.") private File file;
