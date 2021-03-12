@@ -5,7 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3e995e53-bec3-4f3c-bfcd-3cb816043a5f" name="Default Changelist" comment="">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+=======
+<<<<<<< HEAD
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ch/heigvd/VallonGroeliGonzalezLeon/statique/App.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ch/heigvd/VallonGroeliGonzalezLeon/statique/CheckSum.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ch/heigvd/VallonGroeliGonzalezLeon/statique/Statique.java" afterDir="false" />
+>>>>>>> e6c0ba4c6e546ec0331f0bdd3255a54d5aac72de
+>>>>>>> 667606b9331d1e086e22e6c90af58114fe25de78
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +73,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1615541988802</updated>
-      <workItem from="1615541990271" duration="3382000" />
+      <workItem from="1615541990271" duration="3414000" />
     </task>
     <servers />
   </component>
