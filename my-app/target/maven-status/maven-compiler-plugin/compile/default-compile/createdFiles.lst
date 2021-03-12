@@ -1,5 +1,0 @@
-com\mycompany\app\App.class
-com\mycompany\app\CheckSum.class
-com\mycompany\app\command\BuildCommand.class
-com\mycompany\app\command\NewCommand.class
-com\mycompany\app\command\CleanCommand.class
