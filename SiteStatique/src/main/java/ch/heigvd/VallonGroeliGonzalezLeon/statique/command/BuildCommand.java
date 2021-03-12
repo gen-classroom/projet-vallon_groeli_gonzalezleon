@@ -1,4 +1,4 @@
-package com.mycompany.app.command;
+package ch.heigvd.VallonGroeliGonzalezLeon.statique.command;
 
 
 import picocli.CommandLine;

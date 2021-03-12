@@ -3,8 +3,12 @@
  * @Authors : David González León
  * @Date 5 mars 2021
  */
-package com.mycompany.app;
+package ch.heigvd.VallonGroeliGonzalezLeon.statique;
 
+import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.BuildCommand;
+import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.CleanCommand;
+import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.NewCommand;
+import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.ServeCommand;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -17,7 +21,8 @@ import java.security.MessageDigest;
 import java.util.concurrent.Callable;
 
 @Command(name = "checksum", mixinStandardHelpOptions = true, version = "checksum 4.0",
-         description = "Prints the checksum (MD5 by default) of a file to STDOUT.")
+         description = "Prints the checksum (MD5 by default) of a file to STDOUT.",
+         subcommands = {BuildCommand.class, CleanCommand.class, NewCommand.class, ServeCommand.class})
 class CheckSum implements Callable<Integer> {
 
    @Parameters(index = "0", description = "The file whose checksum to calculate.") private File file;
