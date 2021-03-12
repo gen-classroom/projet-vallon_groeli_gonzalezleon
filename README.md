@@ -1,6 +1,6 @@
 # README
 
-Ce document créé par le groupe vallon_groeli_gonzalezleon a été créé sur github et contient 4 outil Picocli.
+Ce projet créé par le groupe vallon_groeli_gonzalezleon a été créé sur github et contient 4 outil Picocli.
 
 1. Build
 
