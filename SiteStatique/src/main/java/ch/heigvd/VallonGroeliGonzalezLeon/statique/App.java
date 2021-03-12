@@ -1,4 +1,4 @@
-package com.mycompany.app;
+package ch.heigvd.VallonGroeliGonzalezLeon.statique;
 
 /**
  * Hello world!
