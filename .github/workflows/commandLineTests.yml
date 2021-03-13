@@ -25,3 +25,27 @@ jobs:
           unzip target/statique.zip
           export PATH=$PATH:`pwd`/statique/bin
           statique
+      - name: Test of clean subcommand
+          run: |
+            cd SiteStatique
+            mvn clean install
+            rm -fr statique
+            unzip target/statique.zip
+            export PATH=$PATH:`pwd`/statique/bin
+            statique clean
+      - name: Test of build subcommand
+          run: |
+            cd SiteStatique
+            mvn clean install
+            rm -fr statique
+            unzip target/statique.zip
+            export PATH=$PATH:`pwd`/statique/bin
+            statique build
+      - name: Test of init subcommand
+          run: |
+            cd SiteStatique
+            mvn clean install
+            rm -fr statique
+            unzip target/statique.zip
+            export PATH=$PATH:`pwd`/statique/bin
+            statique init
