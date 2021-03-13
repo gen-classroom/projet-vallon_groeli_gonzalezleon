@@ -6,23 +6,17 @@
 package ch.heigvd.VallonGroeliGonzalezLeon.statique;
 
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.BuildCommand;
-import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.CleanCommand;
+import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.Clean;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.NewCommand;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.ServeCommand;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
 
-import java.io.File;
-import java.math.BigInteger;
-import java.nio.file.Files;
-import java.security.MessageDigest;
 import java.util.concurrent.Callable;
 
 @Command(name = "Statique", mixinStandardHelpOptions = true, version = "0.0.1",
          description = "Creates and handles the generation of a statique site generator",
-         subcommands = {BuildCommand.class, CleanCommand.class, NewCommand.class, ServeCommand.class})
+         subcommands = {BuildCommand.class, Clean.class, NewCommand.class, ServeCommand.class})
 class Statique implements Callable<Integer> {
 
    public static void main(String... args) {
