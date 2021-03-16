@@ -22,6 +22,7 @@ Puis passez dans powershell et executez la commande suivante :
 ```
  $env:Path += ";VotrePathVersLeDossierbinQueVousAvezExtraitdansStatique"
  ```
+ Si vous rajoutez directement cette adresse dans le PATH de votre pc, vous avez plus besoin de faire cette partie.
 
 Après vous pouvez appeler l'application avec statique.bat
 
