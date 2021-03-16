@@ -40,6 +40,7 @@ jobs:
           rm -fr statique
           unzip target/statique.zip
           export PATH=$PATH:`pwd`/statique/bin
+          echo '# Test' > index.md
           statique build
 #      - name: Test of init subcommand
 #        run: |
