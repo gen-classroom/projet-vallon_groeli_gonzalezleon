@@ -34,6 +34,7 @@ class UtilTest {
       Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(test)));
       String result = Util.readFile(reader);
       assertEquals(result,content);
+      test.delete();
    }
 
 }
