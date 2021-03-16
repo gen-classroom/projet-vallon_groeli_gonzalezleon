@@ -39,7 +39,7 @@ public class Build implements Callable<Integer> {
          if (!mdFile.isFile()) {
             return 2;
          }
-         String content = Util.readFile(mdFile);
+         String content = Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(mdFile))));
          Parser parser = Parser.builder().build();
          Node document = parser.parse(content);
          HtmlRenderer renderer = HtmlRenderer.builder().build();
@@ -51,6 +51,7 @@ public class Build implements Callable<Integer> {
          System.err.println("Error while reading or writing the file");
          e.printStackTrace();
          return 2;
-      } return 0;
+      }
+      return 0;
    }
 }
