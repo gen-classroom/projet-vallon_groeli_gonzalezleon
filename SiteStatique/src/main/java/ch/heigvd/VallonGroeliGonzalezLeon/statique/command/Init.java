@@ -23,8 +23,8 @@ public class Init implements Callable<Integer> {
          boolean success = targetDirectory.mkdirs();
          if (success) {
             try {
-               File config = new File(targetDirectory + "config.json");
-               File index = new File(targetDirectory + "index.md");
+               File config = new File(targetDirectory + "/config.json");
+               File index = new File(targetDirectory + "/index.md");
                if (config.createNewFile()) {
                   System.out.println("File created : " + config.getName());
                } else {
