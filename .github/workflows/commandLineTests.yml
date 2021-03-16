@@ -1,0 +1,51 @@
+name: CI picocli
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Test of main command
+        run: |
+          cd SiteStatique
+          mvn clean install
+          rm -fr statique
+          unzip target/statique.zip
+          export PATH=$PATH:`pwd`/statique/bin
+          statique
+      - name: Test of clean subcommand
+        run: |
+          cd SiteStatique
+          mvn clean install
+          rm -fr statique
+          unzip target/statique.zip
+          export PATH=$PATH:`pwd`/statique/bin
+          statique clean /mon/site
+      - name: Test of build subcommand
+        run: |
+          cd SiteStatique
+          mvn clean install
+          rm -fr statique
+          unzip target/statique.zip
+          export PATH=$PATH:`pwd`/statique/bin
+          statique build
+#      - name: Test of init subcommand
+#        run: |
+#          cd SiteStatique
+#          mvn clean install
+#          rm -fr statique
+#          unzip target/statique.zip
+#          export PATH=$PATH:`pwd`/statique/bin
+#          statique init
