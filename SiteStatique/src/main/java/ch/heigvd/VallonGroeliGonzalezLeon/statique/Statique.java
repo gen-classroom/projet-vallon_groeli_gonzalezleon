@@ -15,9 +15,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.concurrent.Callable;
 
 @Command(name = "Statique", mixinStandardHelpOptions = true,
@@ -43,7 +41,17 @@ public class Statique implements Callable<Integer> {
 class VersionProviderWithVariables implements CommandLine.IVersionProvider {
    public String[] getVersion() throws IOException, XmlPullParserException {
       MavenXpp3Reader reader = new MavenXpp3Reader();
-      Model model = reader.read(new FileReader("pom.xml"));
+      Model model;
+      if ((new File("pom.xml")).exists())
+         model = reader.read(new FileReader("pom.xml"));
+      else
+         model = reader.read(
+                 new InputStreamReader(
+                         Statique.class.getResourceAsStream(
+                                 "/META-INF/maven/ch.heigvd.VallonGroeliGonzalezLeon/SiteStatique/pom.xml"
+                         )
+                 )
+         );
       return new String[] {model.getVersion()};
    }
 }
