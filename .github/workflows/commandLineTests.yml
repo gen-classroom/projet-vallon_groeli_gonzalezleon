@@ -32,6 +32,7 @@ jobs:
           rm -fr statique
           unzip target/statique.zip
           export PATH=$PATH:`pwd`/statique/bin
+          mkdir build
           statique clean
       - name: Test of build subcommand
         run: |
