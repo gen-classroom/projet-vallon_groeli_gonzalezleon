@@ -32,7 +32,7 @@ jobs:
           rm -fr statique
           unzip target/statique.zip
           export PATH=$PATH:`pwd`/statique/bin
-          statique clean
+          statique clean /mon/site
       - name: Test of build subcommand
         run: |
           cd SiteStatique
