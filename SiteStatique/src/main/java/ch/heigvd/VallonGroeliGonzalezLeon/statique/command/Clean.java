@@ -15,15 +15,17 @@ public class Clean implements Callable<Integer> {
 
    @Override
    public Integer call() throws IOException {
-      File targetDirectory = new File(new File(".").getCanonicalPath() + sitePath);
-      File[] files = targetDirectory.listFiles();
-      if (files != null) {
-         for (File file : files) {
-            if (file.isDirectory() && file.getName().equals("build")) {
-               try {
-                  FileUtils.deleteDirectory(file);
-               } catch (IOException ioException) {
-                  System.out.println("Error while deleting the build directory");
+      if (sitePath != null) {
+         File targetDirectory = new File(new File(".").getCanonicalPath() + sitePath);
+         File[] files = targetDirectory.listFiles();
+         if (files != null) {
+            for (File file : files) {
+               if (file.isDirectory() && file.getName().equals("build")) {
+                  try {
+                     FileUtils.deleteDirectory(file);
+                  } catch (IOException ioException) {
+                     System.out.println("Error while deleting the build directory");
+                  }
                }
             }
          }
