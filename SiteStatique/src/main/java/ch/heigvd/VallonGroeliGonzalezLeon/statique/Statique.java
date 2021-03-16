@@ -17,7 +17,7 @@ import java.util.concurrent.Callable;
 @Command(name = "Statique", mixinStandardHelpOptions = true, version = "0.0.1",
          description = "Creates and handles the generation of a statique site generator",
          subcommands = {BuildCommand.class, Clean.class, NewCommand.class, ServeCommand.class})
-class Statique implements Callable<Integer> {
+public class Statique implements Callable<Integer> {
 
    public static void main(String... args) {
       int exitCode = new CommandLine(new Statique()).execute(args);
