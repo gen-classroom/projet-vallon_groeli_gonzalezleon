@@ -11,7 +11,7 @@ import java.util.concurrent.Callable;
                      description = "Cleans the given directory of any generated html files")
 public class Clean implements Callable<Integer> {
 
-   @CommandLine.Parameters(index = "1") String sitePath;
+   @CommandLine.Parameters(index = "0") String sitePath;
 
    @Override
    public Integer call() throws IOException {
