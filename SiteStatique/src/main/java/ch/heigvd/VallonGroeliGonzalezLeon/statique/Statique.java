@@ -12,18 +12,16 @@ import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.ServeCommand;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-import picocli.CommandLine.Parameters;
 
-import java.io.File;
-import java.math.BigInteger;
-import java.nio.file.Files;
-import java.security.MessageDigest;
 import java.util.concurrent.Callable;
 
 @Command(name = "Statique", mixinStandardHelpOptions = true, version = "0.0.1",
          description = "Creates and handles the generation of a statique site generator",
          subcommands = {BuildCommand.class, CleanCommand.class, NewCommand.class, ServeCommand.class})
+
 class Statique implements Callable<Integer> {
+   @Option(name = "-version", description = "print the version of statique")
+   boolean versionRequested;
 
    public static void main(String... args) {
       int exitCode = new CommandLine(new Statique()).execute(args);
