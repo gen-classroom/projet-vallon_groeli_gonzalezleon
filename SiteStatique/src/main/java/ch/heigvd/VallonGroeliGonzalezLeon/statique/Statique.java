@@ -20,7 +20,7 @@ import java.util.concurrent.Callable;
          subcommands = {BuildCommand.class, CleanCommand.class, NewCommand.class, ServeCommand.class})
 
 class Statique implements Callable<Integer> {
-   @Option(name = "-version", description = "print the version of statique")
+   @Option(names = "-version", description = "print the version of statique")
    boolean versionRequested;
 
    public static void main(String... args) {
@@ -32,6 +32,8 @@ class Statique implements Callable<Integer> {
    @Override
    public Integer call() throws Exception { // your business logic goes here...
       CommandLine.usage(this, System.out);
+      if(versionRequested)
+         System.out.println(getClass().getPackage().getImplementationVersion());
       return 0;
    }
 
