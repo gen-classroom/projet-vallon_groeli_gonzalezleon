@@ -7,7 +7,7 @@ package ch.heigvd.VallonGroeliGonzalezLeon.statique;
 
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.BuildCommand;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.Clean;
-import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.NewCommand;
+import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.Init;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.ServeCommand;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
