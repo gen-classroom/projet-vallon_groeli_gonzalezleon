@@ -9,33 +9,41 @@ import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.BuildCommand;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.Clean;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.NewCommand;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.ServeCommand;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Option;
 
-
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.concurrent.Callable;
 
-@Command(name = "Statique", mixinStandardHelpOptions = true, version = "0.0.1",
+@Command(name = "Statique", mixinStandardHelpOptions = true,
          description = "Creates and handles the generation of a statique site generator",
-         subcommands = {BuildCommand.class, Clean.class, NewCommand.class, ServeCommand.class})
+         subcommands = {BuildCommand.class, Clean.class, NewCommand.class, ServeCommand.class},
+        versionProvider = VersionProviderWithVariables.class)
 
-class Statique implements Callable<Integer> {
-   @Option(names = "-version", description = "print the version of statique")
-   boolean versionRequested;
+
+public class Statique implements Callable<Integer> {
 
    public static void main(String... args) {
       int exitCode = new CommandLine(new Statique()).execute(args);
       System.exit(exitCode);
    }
 
-
    @Override
    public Integer call() throws Exception { // your business logic goes here...
       CommandLine.usage(this, System.out);
-      if(versionRequested)
-         System.out.println(getClass().getPackage().getImplementationVersion());
       return 0;
    }
+}
 
+class VersionProviderWithVariables implements CommandLine.IVersionProvider {
+   public String[] getVersion() throws IOException, XmlPullParserException {
+      MavenXpp3Reader reader = new MavenXpp3Reader();
+      Model model = reader.read(new FileReader("pom.xml"));
+      return new String[] {model.getVersion()};
+   }
 }
