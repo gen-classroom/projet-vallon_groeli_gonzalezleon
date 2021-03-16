@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.io.Writer;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UtilTest {
 
@@ -20,7 +20,7 @@ class UtilTest {
       StringWriter writer = new StringWriter();
       String content = "This is a test to see if the writer works\n Let's hope it does.";
       assertDoesNotThrow(() -> Util.writeFile(content, writer));
-      assertEquals(content,writer.toString());
+      assertEquals(content, writer.toString());
    }
 
 }
