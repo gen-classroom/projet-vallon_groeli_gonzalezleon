@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="601372a1-d689-4c71-b172-7f7862a8b308" name="Default Changelist" comment="">
+    <list default="true" id="eda151f6-fc83-4a50-a87f-f549a540edf9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ch/heigvd/VallonGroeliGonzalezLeon/statique/command/Init.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ch/heigvd/VallonGroeliGonzalezLeon/statique/command/Init.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
