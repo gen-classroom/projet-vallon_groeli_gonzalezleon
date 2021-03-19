@@ -11,27 +11,19 @@ import java.util.concurrent.Callable;
                      description = "Cleans the given directory of any generated html files")
 public class Clean implements Callable<Integer> {
 
-   @CommandLine.Parameters(index = "0") String sitePath;
-
    @Override
    public Integer call() throws IOException {
-      if (sitePath != null) {
-         File targetDirectory = new File(new File(".").getCanonicalPath() + sitePath);
-         File[] files = targetDirectory.listFiles();
-         if (files != null) {
-            for (File file : files) {
-               if (file.isDirectory() && file.getName().equals("build")) {
-                  try {
-                     FileUtils.deleteDirectory(file);
-                  } catch (IOException ioException) {
-                     System.out.println("Error while deleting the build directory");
-                  }
-               }
-            }
+      File targetDirectory = new File(new File(".").getCanonicalPath());
+      File buildDirectory = new File(targetDirectory.getPath() + "/build");
+      if (buildDirectory.exists()) {
+         try {
+            FileUtils.deleteDirectory(buildDirectory);
+         } catch (IOException ioException) {
+            System.out.println("Error while deleting the build directory");
          }
+      } else {
+         System.err.println("Build directory does not exist, please make sure you are in the correct repository");
       }
       return 0;
    }
-
-
 }
