@@ -7,7 +7,7 @@ package ch.heigvd.VallonGroeliGonzalezLeon.statique;
 
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.Build;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.Clean;
-import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.NewCommand;
+import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.Init;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.ServeCommand;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -21,7 +21,7 @@ import java.util.concurrent.Callable;
 @Command(name = "Statique", mixinStandardHelpOptions = true,
          description = "Creates and handles the generation of a statique site generator",
         versionProvider = VersionProviderWithVariables.class,
-         subcommands = {Build.class, Clean.class, NewCommand.class, ServeCommand.class})
+         subcommands = {Build.class, Clean.class, Init.class, ServeCommand.class})
 public class Statique implements Callable<Integer> {
 
    public static void main(String... args) {

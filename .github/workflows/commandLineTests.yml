@@ -43,11 +43,11 @@ jobs:
           export PATH=$PATH:`pwd`/statique/bin
           echo '# Test' > index.md
           statique build
-#      - name: Test of init subcommand
-#        run: |
-#          cd SiteStatique
-#          mvn clean install
-#          rm -fr statique
-#          unzip target/statique.zip
-#          export PATH=$PATH:`pwd`/statique/bin
-#          statique init
+      - name: Test of init subcommand
+        run: |
+          cd SiteStatique
+          mvn clean install
+          rm -fr statique
+          unzip target/statique.zip
+          export PATH=$PATH:`pwd`/statique/bin
+          statique init /mon/site
