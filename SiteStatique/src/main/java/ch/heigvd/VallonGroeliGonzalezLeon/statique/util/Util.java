@@ -5,6 +5,24 @@
  */
 package ch.heigvd.VallonGroeliGonzalezLeon.statique.util;
 
-public class Util {
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
+public class Util {
+   public static String readFile(Reader reader) throws IOException {
+      int c = reader.read();
+      StringBuilder result = new StringBuilder();
+      while (c != -1) {
+         result.append((char) c);
+         c = reader.read();
+      }
+      reader.close();
+      return result.toString();
+   }
+
+   public static void writeFile(String content,  Writer writer) throws IOException {
+      writer.write(content);
+      writer.flush();
+      writer.close();
+   }
 }

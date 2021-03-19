@@ -32,7 +32,8 @@ jobs:
           rm -fr statique
           unzip target/statique.zip
           export PATH=$PATH:`pwd`/statique/bin
-          statique clean /mon/site
+          mkdir build
+          statique clean
       - name: Test of build subcommand
         run: |
           cd SiteStatique
@@ -40,6 +41,7 @@ jobs:
           rm -fr statique
           unzip target/statique.zip
           export PATH=$PATH:`pwd`/statique/bin
+          echo '# Test' > index.md
           statique build
 #      - name: Test of init subcommand
 #        run: |
