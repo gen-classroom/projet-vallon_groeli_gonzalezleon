@@ -51,3 +51,4 @@ jobs:
           unzip target/statique.zip
           export PATH=$PATH:`pwd`/statique/bin
           statique init /mon/site
+          cd /mon/site
