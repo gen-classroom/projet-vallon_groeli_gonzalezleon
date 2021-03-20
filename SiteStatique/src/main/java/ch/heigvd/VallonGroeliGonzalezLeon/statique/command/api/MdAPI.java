@@ -37,7 +37,7 @@ public class MdAPI {
          Node document = parser.parse(content);
          HtmlRenderer renderer = HtmlRenderer.builder().build();
          File htmlFile = new File(buildDirectory.getPath() + "/index.html");
-         Util.writeFile(renderer.render(document).replace("\r\n","\n").replace('\r','\n'), new BufferedWriter(
+         Util.writeFile(renderer.render(document), new BufferedWriter(
                  new OutputStreamWriter(new FileOutputStream(htmlFile), StandardCharsets.UTF_8)));
       } catch (IOException e) {
          System.err.println("Error while reading or writing the file");
