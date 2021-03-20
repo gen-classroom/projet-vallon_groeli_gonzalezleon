@@ -26,7 +26,7 @@ class BuildTest {
       Util.writeFile("# Test",
                      new BufferedWriter(new OutputStreamWriter(new FileOutputStream(mdFile), StandardCharsets.UTF_8)));
       new CommandLine(new Statique()).execute("build");
-      File buildDirectory = new File(new File(".").getCanonicalPath() + "/build");
+      File buildDirectory = new File(new File(".").getCanonicalPath() + "\\build");
       assertTrue(buildDirectory.exists());
       mdFile.delete();
       FileUtils.deleteDirectory(buildDirectory);
@@ -39,7 +39,7 @@ class BuildTest {
       Util.writeFile("# Test",
                      new BufferedWriter(new OutputStreamWriter(new FileOutputStream(mdFile), StandardCharsets.UTF_8)));
       new CommandLine(new Statique()).execute("build");
-      File buildDirectory = new File(new File(".").getCanonicalPath() + "/build");
+      File buildDirectory = new File(new File(".").getCanonicalPath() + "\\build");
       assertTrue(buildDirectory.exists());
       File index = new File(buildDirectory.getPath() + "/index.html");
       assertTrue(index.exists());
