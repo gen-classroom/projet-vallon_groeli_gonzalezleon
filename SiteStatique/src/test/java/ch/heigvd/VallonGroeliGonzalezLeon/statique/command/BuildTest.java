@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BuildTest {
 
+
    @Test
    void testBuildCreatesDirectory() throws IOException {
       File mdFile = new File(new File(".").getCanonicalPath() + "/index.md");
@@ -40,10 +41,10 @@ class BuildTest {
       new CommandLine(new Statique()).execute("build");
       File buildDirectory = new File(new File(".").getCanonicalPath() + "/build");
       assertTrue(buildDirectory.exists());
-      File index = new File(buildDirectory.getPath()+"/index.html");
+      File index = new File(buildDirectory.getPath() + "/index.html");
       assertTrue(index.exists());
       String content = Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(index))));
-      assertEquals(content,"<h1>Test</h1>\n");
+      assertEquals(content, "<h1>Test</h1>" + "\n");
       mdFile.delete();
       FileUtils.deleteDirectory(buildDirectory);
    }
