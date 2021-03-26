@@ -25,7 +25,7 @@ public class JsonAPI {
             throw new IllegalArgumentException();
         // contenu par défaut
         conf.put("charset", "UTF-8");
-        conf.put("description", "My statique webstite");
+        conf.put("description", "My statique website");
         conf.put("keywords", "HTML, CSS, JavaScript");
 
         Util.writeFile(conf.toString(), new FileWriter(emptyFile));

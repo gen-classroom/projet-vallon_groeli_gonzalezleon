@@ -45,7 +45,7 @@ public class Init implements Callable<Integer> {
                   System.out.println("File already exists.");
                } else {
                   index.createNewFile();
-                  System.out.println("File created : " + config.getName());
+                  System.out.println("File created : " + index.getName());
                }
             } catch (IOException e) {
                System.out.println("An error occurred");
