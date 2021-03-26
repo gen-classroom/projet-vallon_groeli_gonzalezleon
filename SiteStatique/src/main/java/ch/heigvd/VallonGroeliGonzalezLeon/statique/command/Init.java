@@ -7,7 +7,6 @@ package ch.heigvd.VallonGroeliGonzalezLeon.statique.command;
 
 import org.apache.commons.io.FileUtils;
 import picocli.CommandLine;
-import picocli.CommandLine.Command;
 
 import java.io.File;
 import java.io.IOException;
