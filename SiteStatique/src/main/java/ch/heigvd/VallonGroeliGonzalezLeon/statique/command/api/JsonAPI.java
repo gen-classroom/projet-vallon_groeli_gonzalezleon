@@ -1,6 +1,7 @@
 package ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api;
 
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.util.Util;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -13,8 +14,7 @@ import java.util.Map;
 
 public class JsonAPI {
     /**
-     * Put the content of default website parameters, the user than can edit the file.
-     * The default parameters are hard coded in this function.
+     * Put the content of default website parameters (charset, site description and keywords)
      * @param emptyFile This file must exist, and be empty
      * @throws IOException if the file does not exist or is not writtable
      * @throws IllegalArgumentException the file must be empty
@@ -24,11 +24,9 @@ public class JsonAPI {
         if (emptyFile.getTotalSpace() > 0)
             throw new IllegalArgumentException();
         // contenu par défaut
-        conf.put("titre_site", "Mon site");
-        conf.put("langue", "fr");
-        conf.put("encodage", "UTF-8");
-        conf.put("erreur 404", "404.html");
-        conf.put("default_location", emptyFile.getParentFile().getPath());
+        conf.put("charset", "UTF-8");
+        conf.put("description", "My statique webstite");
+        conf.put("keywords", "HTML, CSS, JavaScript");
 
         Util.writeFile(conf.toString(), new FileWriter(emptyFile));
     }
