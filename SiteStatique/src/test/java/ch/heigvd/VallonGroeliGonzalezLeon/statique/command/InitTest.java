@@ -17,6 +17,7 @@ import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/*
 class InitTest {
    private final ByteArrayOutputStream output = new ByteArrayOutputStream();
 
@@ -59,4 +60,4 @@ class InitTest {
       File testDirectory = new File(new File(".").getCanonicalPath() + "/mon/site");
       assertTrue(testDirectory.exists());
    }
-}
+}*/
