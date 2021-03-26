@@ -6,6 +6,7 @@ package ch.heigvd.VallonGroeliGonzalezLeon.statique.command;/*
 
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.Statique;
 import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import picocli.CommandLine;
 
@@ -14,18 +15,23 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class InitTest {
    private final ByteArrayOutputStream output = new ByteArrayOutputStream();
-/*
+
+   @AfterEach
+   void tearDown() throws IOException {
+      File testDirectory = new File(new File(".").getCanonicalPath() + "/mon/site");
+      FileUtils.deleteDirectory(testDirectory);
+   }
+
+
    @Test
    void testInitCreateDirectory() throws IOException {
       new CommandLine(new Statique()).execute("init", "/mon/init");
       File testDirectory = new File(new File(".").getCanonicalPath() + "/mon/site");
       assertTrue(testDirectory.exists());
-      FileUtils.deleteDirectory(testDirectory);
    }
 
    @Test
@@ -40,7 +46,6 @@ class InitTest {
       new CommandLine(new Statique()).execute("init", "/mon/site");
       File dir1 = new File(new File(".").getCanonicalPath() + "/mon/site/index.md");
       assertTrue(dir1.exists());
-      FileUtils.deleteDirectory(testDirectory);
    }
 
 
@@ -53,6 +58,5 @@ class InitTest {
       assertTrue(output.toString().length() != 0);
       File testDirectory = new File(new File(".").getCanonicalPath() + "/mon/site");
       assertTrue(testDirectory.exists());
-      FileUtils.deleteDirectory(testDirectory);
-   }*/
+   }
 }
