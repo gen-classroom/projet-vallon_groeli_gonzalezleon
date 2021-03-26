@@ -1,6 +1,7 @@
 package ch.heigvd.VallonGroeliGonzalezLeon.statique.command;
 
 
+import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api.MdAPI;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.util.Util;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
@@ -27,31 +28,11 @@ public class Build implements Callable<Integer> {
       }
       File buildDirectory = new File(currentDirectory.getPath() + "\\build");
       buildDirectory.mkdir();
-      if (createIndexPage(buildDirectory, currentDirectory) != 0) {
+      if (MdAPI.createIndexPage(buildDirectory, currentDirectory) != 0) {
          return 2;
       }
       return 0;
    }
 
-   private int createIndexPage(File buildDirectory, File currentDirectory) {
-      try {
-         File mdFile = new File(currentDirectory.getPath() + "/index.md");
-         if (!mdFile.isFile()) {
-            return 2;
-         }
-         String content = Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(mdFile))));
-         Parser parser = Parser.builder().build();
-         Node document = parser.parse(content);
-         HtmlRenderer renderer = HtmlRenderer.builder().build();
-         File htmlFile = new File(buildDirectory.getPath() + "/index.html");
-         htmlFile.createNewFile();
-         Util.writeFile(renderer.render(document), new BufferedWriter(
-                 new OutputStreamWriter(new FileOutputStream(htmlFile), StandardCharsets.UTF_8)));
-      } catch (IOException e) {
-         System.err.println("Error while reading or writing the file");
-         e.printStackTrace();
-         return 2;
-      }
-      return 0;
-   }
+
 }
