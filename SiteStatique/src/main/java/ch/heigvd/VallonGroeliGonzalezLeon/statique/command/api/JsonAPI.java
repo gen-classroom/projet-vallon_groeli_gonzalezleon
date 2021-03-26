@@ -14,8 +14,7 @@ import java.util.Map;
 
 public class JsonAPI {
     /**
-     * Put the content of default website parameters, the user than can edit the file.
-     * The default parameters are hard coded in this function.
+     * Put the content of default website parameters (charset, site description and keywords)
      * @param emptyFile This file must exist, and be empty
      * @throws IOException if the file does not exist or is not writtable
      * @throws IllegalArgumentException the file must be empty
