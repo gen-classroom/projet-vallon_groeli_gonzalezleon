@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.util.concurrent.Callable;
 
 @CommandLine.Command(name = "clean", mixinStandardHelpOptions = true,
-                     description = "Cleans the given directory of any generated html files")
+                     description = "Cleans the given directory of any generated html files and the build directory. " +
+                                   "This command needs to be executed at the root of the directory created by the " +
+                                   "init command")
 public class Clean implements Callable<Integer> {
 
    @Override
