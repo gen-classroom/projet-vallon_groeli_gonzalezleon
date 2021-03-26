@@ -4,3 +4,5 @@ SiteStatique/.idea/
 SiteStatique/target/
 
 SiteStatique/statique/
+
+.idea/workspace.xml
