@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.concurrent.Callable;
 
 
-@CommandLine.Command(name = "build", mixinStandardHelpOptions = true,
+@CommandLine.Command(name = "init", mixinStandardHelpOptions = true,
         description = "Initializes the site and creates a file and a subfile which contains a configuration file (json) and an index file (markdown). This command needs to be" +
                 " executed where the user wants to create the repository of the site")
 
