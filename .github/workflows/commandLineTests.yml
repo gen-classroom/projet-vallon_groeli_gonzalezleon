@@ -44,16 +44,16 @@ jobs:
           echo '# Test' > index.md
           statique build
       - name: Test of -h option
-          run: |
-            cd SiteStatique
-            mvn clean install
-            rm -fr statique
-            unzip target/statique.zip
-            export PATH=$PATH:`pwd`/statique/bin
-            statique -h
-            statique clean -h
-            statique build -h
-            statique -init -h
+        run: |
+          cd SiteStatique
+          mvn clean install
+          rm -fr statique
+          unzip target/statique.zip
+          export PATH=$PATH:`pwd`/statique/bin
+          statique -h
+          statique clean -h
+          statique build -h
+          statique -init -h
       - name: Test of init subcommand
         run: |
           cd SiteStatique
