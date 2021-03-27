@@ -27,7 +27,7 @@ public class MdAPI {
     * @throws IllegalArgumentException the file must be empty
     */
    public static void initMdIndexFile(File emptyFile) throws IOException, IllegalArgumentException {
-      if (emptyFile.getTotalSpace() > 0) { throw new IllegalArgumentException(); }
+      if (emptyFile.length() > 0) { throw new IllegalArgumentException(); }
       // contenu par défaut
       DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
       LocalDateTime now = LocalDateTime.now();
