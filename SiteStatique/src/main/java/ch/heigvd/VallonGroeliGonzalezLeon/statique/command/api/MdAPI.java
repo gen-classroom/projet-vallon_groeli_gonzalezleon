@@ -12,8 +12,31 @@ import org.commonmark.renderer.html.HtmlRenderer;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class MdAPI {
+
+   /**
+    * Put the content of default website content (two headers and text, with the author, date and title of the
+    * article in the heading)
+    *
+    * @param emptyFile This file must exist, and be empty
+    *
+    * @throws IOException              if the file does not exist or is not writtable
+    * @throws IllegalArgumentException the file must be empty
+    */
+   public static void initMdIndexFile(File emptyFile) throws IOException, IllegalArgumentException {
+      if (emptyFile.length() > 0) { throw new IllegalArgumentException(); }
+      // contenu par défaut
+      DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+      LocalDateTime now = LocalDateTime.now();
+      String defaultContent =
+              "titre: Mon premier article\n" + "auteur: John Smith\n" + "date:" + dtf.format(now) + " \n" + "---\n" +
+              "# Mon premier article\n" + "## Mon sous-titre\n" + "Le contenu de mon article.\n";
+
+      Util.writeFile(defaultContent, new FileWriter(emptyFile));
+   }
 
    /**
     * This function creates, from a basic markdown file index.md that must be located in currentDirectory, a html file

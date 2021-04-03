@@ -13,8 +13,7 @@ import org.junit.jupiter.api.Test;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class MdAPITest {
 
@@ -33,6 +32,21 @@ class MdAPITest {
    @AfterEach
    void tearDown() throws IOException {
       FileUtils.deleteDirectory(currentDirectory);
+   }
+
+   @Test
+   void testInitMdFileCreatesAFile() throws IOException {
+      File file = new File(currentDirectory.getPath()+"/test.md");
+      assertFalse(file.exists());
+      MdAPI.initMdIndexFile(file);
+      assertTrue(file.exists());
+   }
+
+   @Test
+   void testInitMdFileThrowsExceptionCorrectly() throws IOException {
+      File file = new File(currentDirectory.getPath()+"/test.md");
+      Util.writeFile("Test", new FileWriter(file));
+      assertThrows(IllegalArgumentException.class,()->{MdAPI.initMdIndexFile(file);});
    }
 
    @Test
