@@ -24,7 +24,3 @@ jobs:
       run: | 
             cd SiteStatique
             mvn -B package --file pom.xml
-    - name: Test with Maven
-      run: | 
-            cd SiteStatique
-            mvn test
