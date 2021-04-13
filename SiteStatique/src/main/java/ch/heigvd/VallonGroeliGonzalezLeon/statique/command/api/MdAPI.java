@@ -14,6 +14,8 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
+import java.util.Scanner;
 
 public class MdAPI {
 
@@ -69,4 +71,26 @@ public class MdAPI {
       }
       return 0;
    }
+
+   public static String returnHTMLHeader(File json, final String mdContent) throws IOException {
+      String header = "<head>\n";
+
+      Map<String,Object> map = JsonAPI.returnJSONParam(json);
+      Scanner scanner = new Scanner(mdContent);
+      int i = 0;
+      while (scanner.hasNextLine() && i < 3) {
+         String[] line = scanner.nextLine().split("[: ]");
+         map.put(line[0], line[1]);
+         i++;
+      }
+      scanner.close();
+      header += "\t<meta charset=\"" + map.get("charset") + "\">\n";
+      header += "\t<meta name=\"description\" content=\"" + map.get("description") + ">\"\n";
+      header += "\t<meta name=\"keywords\" content=\"" + map.get("keywords") + "\">\n";
+      header += "\t<meta name=\"author\" content=\"" + map.get("auteur") + "\">\n";
+      header += "<title>" + map.get("titre") + " " + map.get("date") + "</title>\n";
+      header += "</head>\n";
+      return header;
+   }
 }
+
