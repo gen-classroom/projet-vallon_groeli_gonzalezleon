@@ -62,3 +62,11 @@ jobs:
           unzip target/statique.zip
           export PATH=$PATH:`pwd`/statique/bin
           statique init /mon/site
+      - name: Test of version option
+        run: |
+          cd SiteStatique
+          mvn clean install
+          rm -fr statique
+          unzip target/statique.zip
+          export PATH=$PATH:`pwd`/statique/bin
+          statique -V
