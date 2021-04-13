@@ -91,10 +91,10 @@ public class MdAPI {
       }
       scanner.close();
       header += "\t<meta charset=\"" + map.get("charset") + "\">\n";
-      header += "\t<meta name=\"description\" content=\"" + map.get("description") + ">\"\n";
+      header += "\t<meta name=\"description\" content=\"" + map.get("description") + "\">n";
       header += "\t<meta name=\"keywords\" content=\"" + map.get("keywords") + "\">\n";
       header += "\t<meta name=\"author\" content=\"" + map.get("auteur") + "\">\n";
-      header += "<title>" + map.get("titre") + " " + map.get("date") + "</title>\n";
+      header += "\t<title>" + map.get("titre") + " " + map.get("date") + "</title>\n";
       header += "</head>\n";
       return header;
    }
