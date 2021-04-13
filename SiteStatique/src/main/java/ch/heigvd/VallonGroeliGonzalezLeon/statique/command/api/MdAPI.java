@@ -59,16 +59,18 @@ public class MdAPI {
          }
 
          String content = Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(mdFile))));
-         String header = returnHTMLHeader(new File(currentDirectory.getPath() + "/config.json"),content);
+         String header = returnHTMLHeader(new File(currentDirectory.getPath() + "/config.json"), content);
 
          Parser parser = Parser.builder().build();
          Node document = parser.parse(content);
          HtmlRenderer renderer = HtmlRenderer.builder().build();
          File htmlFile = new File(buildDirectory.getPath() + "/index.html");
-        // Util.writeFile(header, new BufferedWriter(
+         //Util.writeFile(header, new BufferedWriter(
          //        new OutputStreamWriter(new FileOutputStream(htmlFile), StandardCharsets.UTF_8)));
-
-         Util.writeFile(header + renderer.render(document) , new BufferedWriter(
+         String htmlContent =
+                 "<!DOCTYPE html>\n" + "<html>\n" + header + "<body>\n" + renderer.render(document) + "\n</body>" +
+                 " \n</html>";
+         Util.writeFile(htmlContent, new BufferedWriter(
                  new OutputStreamWriter(new FileOutputStream(htmlFile), StandardCharsets.UTF_8)));
       } catch (IOException e) {
          System.err.println("Error while reading or writing the file");
@@ -81,17 +83,17 @@ public class MdAPI {
    public static String returnHTMLHeader(File json, final String mdContent) throws IOException {
       String header = "<head>\n";
 
-      Map<String,Object> map = JsonAPI.returnJSONParam(json);
+      Map<String, Object> map = JsonAPI.returnJSONParam(json);
       Scanner scanner = new Scanner(mdContent);
       int i = 0;
       while (scanner.hasNextLine() && i < 3) {
-         String[] line = scanner.nextLine().split("[: ]");
+         String[] line = scanner.nextLine().split(":");
          map.put(line[0], line[1]);
          i++;
       }
       scanner.close();
       header += "\t<meta charset=\"" + map.get("charset") + "\">\n";
-      header += "\t<meta name=\"description\" content=\"" + map.get("description") + "\">n";
+      header += "\t<meta name=\"description\" content=\"" + map.get("description") + "\">\n";
       header += "\t<meta name=\"keywords\" content=\"" + map.get("keywords") + "\">\n";
       header += "\t<meta name=\"author\" content=\"" + map.get("auteur") + "\">\n";
       header += "\t<title>" + map.get("titre") + " " + map.get("date") + "</title>\n";

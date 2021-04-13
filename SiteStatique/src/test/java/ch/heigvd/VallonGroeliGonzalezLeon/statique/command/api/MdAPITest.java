@@ -67,7 +67,7 @@ class MdAPITest {
                    Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(htmlFile)))));
    }*/
 
-   /*
+
    @Test
    void test() throws IOException {
       File mdFile = new File(currentDirectory.getPath() + "/index.md");
@@ -77,6 +77,6 @@ class MdAPITest {
       JsonAPI.initJSONConfigFile(json);
       MdAPI.initMdIndexFile(mdFile);
       MdAPI.createIndexPage(new File(currentDirectory.getPath()),new File(currentDirectory.getPath()));
-   }*/
+   }
 
 }
