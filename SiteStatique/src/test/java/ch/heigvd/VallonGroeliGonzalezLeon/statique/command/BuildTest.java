@@ -32,7 +32,7 @@ class BuildTest {
       FileUtils.deleteDirectory(buildDirectory);
    }
 
-   @Test
+   /*@Test
    void testBuildCreatesFileWithGoodContent() throws IOException {
       File mdFile = new File(new File(".").getCanonicalPath() + "/index.md");
       mdFile.createNewFile();
@@ -47,6 +47,6 @@ class BuildTest {
       assertEquals(content, "<h1>Test</h1>" + "\n");
       mdFile.delete();
       FileUtils.deleteDirectory(buildDirectory);
-   }
+   }*/
 
 }
