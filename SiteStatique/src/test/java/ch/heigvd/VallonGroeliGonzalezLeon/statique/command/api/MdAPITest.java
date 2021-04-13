@@ -53,7 +53,7 @@ class MdAPITest {
    void testCreateIndexFileReturns1IfMdFileDoesNotExist() {
       assertEquals(MdAPI.createIndexPage(buildDirectory, currentDirectory), 1);
    }
-
+/*
    @Test
    void testCreateIndexFileCreatesHtmlFile() throws IOException {
       File mdFile = new File(currentDirectory.getPath() + "/index.md");
@@ -63,9 +63,9 @@ class MdAPITest {
       assertEquals(result, 0);
       File htmlFile = new File(buildDirectory.getPath() + "/index.html");
       assertTrue(htmlFile.exists());
-      /*assertEquals("<h1>Test</h1>\n",
-                   Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(htmlFile)))));*/
-   }
+      assertEquals("<h1>Test</h1>\n",
+                   Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(htmlFile)))));
+   }*/
 
    /*
    @Test
