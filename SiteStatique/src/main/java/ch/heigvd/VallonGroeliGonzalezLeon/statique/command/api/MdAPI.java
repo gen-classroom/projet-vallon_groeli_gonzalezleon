@@ -55,12 +55,20 @@ public class MdAPI {
          if (!mdFile.exists()) {
             return 1;
          }
+
          String content = Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(mdFile))));
+         String header = JsonAPI.returnHTMLHeader(new File(currentDirectory.getPath() + "/config.json"), content);
+
          Parser parser = Parser.builder().build();
          Node document = parser.parse(content);
          HtmlRenderer renderer = HtmlRenderer.builder().build();
          File htmlFile = new File(buildDirectory.getPath() + "/index.html");
-         Util.writeFile(renderer.render(document), new BufferedWriter(
+         //Util.writeFile(header, new BufferedWriter(
+         //        new OutputStreamWriter(new FileOutputStream(htmlFile), StandardCharsets.UTF_8)));
+         String htmlContent =
+                 "<!DOCTYPE html>\n" + "<html>\n" + header + "<body>\n" + renderer.render(document) + "\n</body>" +
+                 " \n</html>";
+         Util.writeFile(htmlContent, new BufferedWriter(
                  new OutputStreamWriter(new FileOutputStream(htmlFile), StandardCharsets.UTF_8)));
       } catch (IOException e) {
          System.err.println("Error while reading or writing the file");
@@ -70,3 +78,4 @@ public class MdAPI {
       return 0;
    }
 }
+
