@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="iso-8859-15" standalone="no"?>
+<classDiagram>
+  <diagramElements defaultViewEntities="ALL" defaultViewEnum="true" defaultViewMethods="TYPE_AND_NAME" defaultVisibleTypes="true" informations="" name="Implémentation template">
+    <association aggregation="NONE" direction="FIRST_TO_SECOND" id="58294" name="Uses">
+      <role componentId="57773" name="" visibility="PRIVATE">
+        <multiplicity>
+          <min>1</min>
+          <max>1</max>
+        </multiplicity>
+      </role>
+      <role componentId="57772" name="" visibility="PRIVATE">
+        <multiplicity>
+          <min>1</min>
+          <max>1</max>
+        </multiplicity>
+      </role>
+    </association>
+    <association aggregation="NONE" direction="FIRST_TO_SECOND" id="58273" name="Uses">
+      <role componentId="57773" name="" visibility="PRIVATE">
+        <multiplicity>
+          <min>1</min>
+          <max>1</max>
+        </multiplicity>
+      </role>
+      <role componentId="57771" name="" visibility="PRIVATE">
+        <multiplicity>
+          <min>1</min>
+          <max>1</max>
+        </multiplicity>
+      </role>
+    </association>
+    <inheritance id="58132" innerClass="true">
+      <child>57772</child>
+      <parent>58131</parent>
+    </inheritance>
+    <entity entityType="CLASS" id="58131" isAbstract="false" name="JsonContent" visibility="PUBLIC">
+      <attribute const="false" defaultValue="" isStatic="false" name="charset" type="String" visibility="PRIVATE"/>
+      <attribute const="false" defaultValue="" isStatic="false" name="domain" type="String" visibility="PRIVATE"/>
+      <attribute const="false" defaultValue="" isStatic="false" name="keywords" type="String" visibility="PRIVATE"/>
+      <attribute const="false" defaultValue="" isStatic="false" name="siteTitle" type="String" visibility="PRIVATE"/>
+    </entity>
+    <inheritance id="58076" innerClass="true">
+      <child>57771</child>
+      <parent>57938</parent>
+    </inheritance>
+    <entity entityType="CLASS" id="57938" isAbstract="false" name="MdContent" visibility="PUBLIC">
+      <attribute const="false" defaultValue="" isStatic="false" name="content" type="String" visibility="PRIVATE"/>
+      <attribute const="false" defaultValue="" isStatic="false" name="author" type="String" visibility="PRIVATE"/>
+      <attribute const="false" defaultValue="" isStatic="false" name="date" type="String" visibility="PRIVATE"/>
+      <attribute const="false" defaultValue="" isStatic="false" name="pageTitle" type="String" visibility="PRIVATE"/>
+    </entity>
+    <entity entityType="CLASS" id="57773" isAbstract="false" name="TemplateHTML" visibility="PUBLIC">
+      <attribute const="false" defaultValue="" isStatic="false" name="layoutFile" type="File" visibility="PRIVATE"/>
+      <attribute const="false" defaultValue="" isStatic="false" name="configFile" type="File" visibility="PRIVATE"/>
+      <method is-constructor="true" isAbstract="false" isStatic="false" name="TemplateHTML" returnType="" view="DEFAULT" visibility="PUBLIC">
+        <variable const="false" name="layoutFile" type="File"/>
+        <variable const="false" name="configFile" type="File"/>
+      </method>
+      <method isAbstract="false" isStatic="false" name="generatePage" returnType="String" view="DEFAULT" visibility="PUBLIC">
+        <variable const="false" name="mdFile" type="File"/>
+      </method>
+    </entity>
+    <entity entityType="CLASS" id="57772" isAbstract="false" name="JsonAPI" visibility="PUBLIC">
+      <method isAbstract="false" isStatic="false" name="analyseFile" returnType="JsonContent" view="DEFAULT" visibility="PUBLIC">
+        <variable const="false" name="mdFile" type="File"/>
+      </method>
+    </entity>
+    <entity entityType="CLASS" id="57771" isAbstract="false" name="MdAPI" visibility="PUBLIC">
+      <method isAbstract="false" isStatic="false" name="analyseFile" returnType="MdContent" view="DEFAULT" visibility="PUBLIC">
+        <variable const="false" name="mdFile" type="File"/>
+      </method>
+    </entity>
+  </diagramElements>
+  <umlView grid="10" name="Main view" open="true">
+    <relationView color="-12566464" relationId="58076">
+      <line>
+        <point>
+          <x>321</x>
+          <y>131</y>
+        </point>
+        <point>
+          <x>171</x>
+          <y>131</y>
+        </point>
+      </line>
+    </relationView>
+    <relationView color="-12566464" relationId="58132">
+      <line>
+        <point>
+          <x>931</x>
+          <y>131</y>
+        </point>
+        <point>
+          <x>1121</x>
+          <y>131</y>
+        </point>
+      </line>
+    </relationView>
+    <relationView color="-12566464" relationId="58273">
+      <line>
+        <point>
+          <x>511</x>
+          <y>251</y>
+        </point>
+        <point>
+          <x>511</x>
+          <y>161</y>
+        </point>
+      </line>
+      <labelAssociation>
+        <x>515</x>
+        <y>210</y>
+        <w>30</w>
+        <h>16</h>
+      </labelAssociation>
+      <roleAssociation>
+        <x>515</x>
+        <y>229</y>
+        <w>0</w>
+        <h>16</h>
+      </roleAssociation>
+      <roleAssociation>
+        <x>515</x>
+        <y>165</y>
+        <w>0</w>
+        <h>16</h>
+      </roleAssociation>
+      <multipliciteAssociation>
+        <x>497</x>
+        <y>229</y>
+        <w>8</w>
+        <h>16</h>
+      </multipliciteAssociation>
+      <multipliciteAssociation>
+        <x>497</x>
+        <y>165</y>
+        <w>8</w>
+        <h>16</h>
+      </multipliciteAssociation>
+    </relationView>
+    <relationView color="-12566464" relationId="58294">
+      <line>
+        <point>
+          <x>741</x>
+          <y>251</y>
+        </point>
+        <point>
+          <x>741</x>
+          <y>161</y>
+        </point>
+      </line>
+      <labelAssociation>
+        <x>745</x>
+        <y>210</y>
+        <w>30</w>
+        <h>16</h>
+      </labelAssociation>
+      <roleAssociation>
+        <x>745</x>
+        <y>229</y>
+        <w>0</w>
+        <h>16</h>
+      </roleAssociation>
+      <roleAssociation>
+        <x>745</x>
+        <y>165</y>
+        <w>0</w>
+        <h>16</h>
+      </roleAssociation>
+      <multipliciteAssociation>
+        <x>727</x>
+        <y>229</y>
+        <w>8</w>
+        <h>16</h>
+      </multipliciteAssociation>
+      <multipliciteAssociation>
+        <x>727</x>
+        <y>165</y>
+        <w>8</w>
+        <h>16</h>
+      </multipliciteAssociation>
+    </relationView>
+    <componentView color="-2079" componentID="57771" displayAttributes="true" displayDefault="true" displayMethods="true">
+      <geometry>
+        <x>320</x>
+        <y>90</y>
+        <w>240</w>
+        <h>70</h>
+      </geometry>
+    </componentView>
+    <componentView color="-2079" componentID="57772" displayAttributes="true" displayDefault="true" displayMethods="true">
+      <geometry>
+        <x>690</x>
+        <y>90</y>
+        <w>240</w>
+        <h>70</h>
+      </geometry>
+    </componentView>
+    <componentView color="-2079" componentID="57773" displayAttributes="true" displayDefault="true" displayMethods="true">
+      <geometry>
+        <x>460</x>
+        <y>250</y>
+        <w>300</w>
+        <h>115</h>
+      </geometry>
+    </componentView>
+    <componentView color="-2079" componentID="57938" displayAttributes="true" displayDefault="true" displayMethods="true">
+      <geometry>
+        <x>50</x>
+        <y>100</y>
+        <w>120</w>
+        <h>115</h>
+      </geometry>
+    </componentView>
+    <componentView color="-2079" componentID="58131" displayAttributes="true" displayDefault="true" displayMethods="true">
+      <geometry>
+        <x>1120</x>
+        <y>90</y>
+        <w>150</w>
+        <h>115</h>
+      </geometry>
+    </componentView>
+  </umlView>
+</classDiagram>
