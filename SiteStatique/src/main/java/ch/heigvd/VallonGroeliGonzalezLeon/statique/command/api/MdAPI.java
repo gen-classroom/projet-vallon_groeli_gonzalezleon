@@ -33,7 +33,7 @@ public class MdAPI {
       DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
       LocalDateTime now = LocalDateTime.now();
       String defaultContent =
-              "titre: Mon premier article\n" + "auteur: John Smith\n" + "date:" + dtf.format(now) + " \n" + "---\n" +
+              "titre:Mon premier article\n" + "auteur:John Smith\n" + "date:" + dtf.format(now) + "\n" + "---\n" +
               "# Mon premier article\n" + "## Mon sous-titre\n" + "Le contenu de mon article.\n";
 
       Util.writeFile(defaultContent, new FileWriter(emptyFile));
@@ -90,7 +90,7 @@ public class MdAPI {
       String pageTitle = lines[0].split(":")[1];
       StringBuilder content = new StringBuilder();
       for (int i = 4; i < lines.length; ++i) {
-         content.append(lines[i]);
+         content.append(lines[i]+"\n");
       }
 
       return new MdContent(content.toString(), author, date, pageTitle);
