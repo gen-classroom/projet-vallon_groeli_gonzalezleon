@@ -92,8 +92,11 @@ public class MdAPI {
       for (int i = 4; i < lines.length; ++i) {
          content.append(lines[i]+"\n");
       }
+      Parser parser = Parser.builder().build();
+      Node document = parser.parse(content.toString());
+      HtmlRenderer renderer = HtmlRenderer.builder().build();
 
-      return new MdContent(content.toString(), author, date, pageTitle);
+      return new MdContent(renderer.render(document), author, date, pageTitle);
    }
 
    static class MdContent {
