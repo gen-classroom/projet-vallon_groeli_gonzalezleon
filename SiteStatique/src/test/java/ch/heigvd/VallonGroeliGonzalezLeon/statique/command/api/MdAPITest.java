@@ -6,6 +6,9 @@ package ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api;/*
 
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.util.Util;
 import org.apache.commons.io.FileUtils;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -87,7 +90,10 @@ class MdAPITest {
       assertTrue(mdFile.exists());
       MdAPI.MdContent mdContent = MdAPI.analyseFile(mdFile);
       assertEquals(author,mdContent.getAuthor());
-      assertEquals(content,mdContent.getContent());
+      Parser parser = Parser.builder().build();
+      Node document = parser.parse(content);
+      HtmlRenderer renderer = HtmlRenderer.builder().build();
+      assertEquals(renderer.render(document),mdContent.getContent());
       assertEquals(date,mdContent.getDate());
       assertEquals(titre,mdContent.getPageTitle());
    }
