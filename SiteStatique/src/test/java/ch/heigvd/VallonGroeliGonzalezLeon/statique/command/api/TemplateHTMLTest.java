@@ -52,7 +52,7 @@ class TemplateHTMLTest {
 
         String test = template.generatePage(fileIndex);
 
-        assertEquals(result, "test");
+        assertEquals(result, test);
     }
 
 

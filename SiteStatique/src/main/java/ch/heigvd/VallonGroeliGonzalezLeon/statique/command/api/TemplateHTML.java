@@ -10,6 +10,8 @@ import com.github.jknack.handlebars.io.TemplateLoader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,11 +20,14 @@ public class TemplateHTML {
     private File configFile;
     private Template template;
 
+
     public TemplateHTML(File layoutFile, File configFile) throws IOException {
         this.layoutFile = layoutFile;
         this.configFile = configFile;
         TemplateLoader loader = new ClassPathTemplateLoaderCustom(layoutFile.getParentFile().getPath(), ".html");
+
         Handlebars handlebars = new Handlebars(loader);
+        System.out.println("ici " + loader.getPrefix());
         template = handlebars.compile("layout");
     }
 
@@ -47,21 +52,47 @@ public class TemplateHTML {
 
     class ClassPathTemplateLoaderCustom extends ClassPathTemplateLoader {
 
-        private String prefix;
+        private String prefix = "";
 
         public ClassPathTemplateLoaderCustom(String prefix, String suffix) {
             super(prefix, suffix);
+            this.prefix = prefix;
+        }
+
+        @Override
+        public String getPrefix() {
+            return this.prefix;
+        }
+
+        @Override
+        protected URL getResource(String location) {
+            try {
+                return new File(location).toURL();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
 
         @Override
         public void setPrefix(String prefix) {
             //this.prefix = notNull(prefix, "A view prefix is required.");
             if (prefix != null) {
-                this.prefix = prefix;
+                this.prefix += prefix;
                 if (!this.prefix.endsWith("\\")) {
                     this.prefix += "\\";
                 }
             }
+        }
+
+        @Override
+        public String resolve(String uri) {
+            return getPrefix() + "\\" + normalize(uri) + getSuffix();
+        }
+
+        @Override
+        protected String normalize(String location) {
+            return location;
         }
     }
 }
