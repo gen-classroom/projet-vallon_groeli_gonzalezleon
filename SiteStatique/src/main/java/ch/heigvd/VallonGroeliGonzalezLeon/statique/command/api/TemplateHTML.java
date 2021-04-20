@@ -21,7 +21,7 @@ public class TemplateHTML {
     public TemplateHTML(File layoutFile, File configFile) throws IOException {
         this.layoutFile = layoutFile;
         this.configFile = configFile;
-        TemplateLoader loader = new ClassPathTemplateLoader(layoutFile.getParentFile().getPath(), ".html");
+        TemplateLoader loader = new ClassPathTemplateLoaderCustom(layoutFile.getParentFile().getPath(), ".html");
         Handlebars handlebars = new Handlebars(loader);
         template = handlebars.compile("layout");
     }
@@ -43,5 +43,25 @@ public class TemplateHTML {
         parameterMap.put("site.titre", "TEST POUR LE SITE");
         String templateString = template.apply(parameterMap);
         return templateString;
+    }
+
+    class ClassPathTemplateLoaderCustom extends ClassPathTemplateLoader {
+
+        private String prefix;
+
+        public ClassPathTemplateLoaderCustom(String prefix, String suffix) {
+            super(prefix, suffix);
+        }
+
+        @Override
+        public void setPrefix(String prefix) {
+            //this.prefix = notNull(prefix, "A view prefix is required.");
+            if (prefix != null) {
+                this.prefix = prefix;
+                if (!this.prefix.endsWith("\\")) {
+                    this.prefix += "\\";
+                }
+            }
+        }
     }
 }

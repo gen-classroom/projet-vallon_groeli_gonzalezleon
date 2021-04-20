@@ -26,7 +26,6 @@ class InitTest {
         File testDirectory = new File(new File(".").getCanonicalPath() + "/mon");
         FileUtils.deleteDirectory(testDirectory);
     }
-//TODO ajouter test des nvx fichier cree a initiation
 
     @Test
     void testInitCreateDirectory() throws IOException {
