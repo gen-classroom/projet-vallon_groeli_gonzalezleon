@@ -7,8 +7,8 @@ package ch.heigvd.VallonGroeliGonzalezLeon.statique;
 
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.Build;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.Clean;
-import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.Init;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.ServeCommand;
+import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.Init;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
