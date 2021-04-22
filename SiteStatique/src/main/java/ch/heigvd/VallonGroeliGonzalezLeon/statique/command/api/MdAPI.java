@@ -58,8 +58,8 @@ public class MdAPI {
          }
 
          String content = Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(mdFile))));
-         String header = JsonAPI.returnHTMLHeader(new File(currentDirectory.getPath() + "/config.json"), content);
-
+         //String header = JsonAPI.returnHTMLHeader(new File(currentDirectory.getPath() + "/config.json"), content);
+         String header = "";
          Parser parser = Parser.builder().build();
          Node document = parser.parse(content);
          HtmlRenderer renderer = HtmlRenderer.builder().build();

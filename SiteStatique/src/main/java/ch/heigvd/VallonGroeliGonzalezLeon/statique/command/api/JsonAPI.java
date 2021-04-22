@@ -54,7 +54,7 @@ public class JsonAPI {
               obj.getString("keywords"), obj.getString("siteTitle"));
    }
 
-   public static String returnHTMLHeader(File json, final String mdContent) throws IOException {
+   /*public static String returnHTMLHeader(File json, final String mdContent) throws IOException {
       String header = "<head>\n";
 
       //Map<String, Object> map = JsonAPI.returnJSONParam(json);
@@ -73,7 +73,7 @@ public class JsonAPI {
       //header += "\t<title>" + map.get("titre") + " " + map.get("date") + "</title>\n";
       header += "</head>\n";
       return header;
-   }
+   }*/
 
    static class JsonContent{
       @Getter private final String charset;
