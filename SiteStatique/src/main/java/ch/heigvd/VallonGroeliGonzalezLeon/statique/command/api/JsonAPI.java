@@ -35,12 +35,12 @@ public class JsonAPI {
    }
 
    /**
-    * Fonction that return the content of a JSON file as a map.
+    * Fonction that return the content of a JSON file.
     * If the file is empty, it return an empty map
     *
     * @param file file containing the json parameters
     *
-    * @return the map with datas
+    * @return the JsonContent
     *
     * @throws IOException the file must exist and be readable
     */
@@ -50,8 +50,20 @@ public class JsonAPI {
          return null;
       }
       JSONObject obj = new JSONObject(chaine);
-      return new JsonContent(obj.getString("charset"), obj.getString("domain"),
-              obj.getString("keywords"), obj.getString("siteTitle"));
+      return new JsonContent(getStringContent(obj,"charset"),
+              getStringContent(obj,"domain"),
+              getStringContent(obj,"keywords"),
+              getStringContent(obj,"siteTitle"));
+   }
+
+   private static String getStringContent(JSONObject obj, String key){
+      String getStringContent = null;
+      try {
+         getStringContent = obj.getString(key);
+      }catch (org.json.JSONException exception){
+         // nothing to do here, the parameter is just unspecified
+      }
+      return getStringContent;
    }
 
    /*public static String returnHTMLHeader(File json, final String mdContent) throws IOException {
