@@ -48,7 +48,7 @@ class TemplateHTMLTest {
         String result =
                 "<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">" +
                         "\n<title>TEST POUR LE SITE| {{page.titre}}</title>\n</head>\n<body>\n" +
-                        "{%include menu.html}\n{{content }}\n</body>\n</html>";
+                        "{%include menu.html}\n{{content}}\n</body>\n</html>";
 
         String test = template.generatePage(fileIndex);
 
