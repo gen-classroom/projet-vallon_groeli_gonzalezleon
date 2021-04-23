@@ -43,7 +43,7 @@ public class TemplateHTML {
         TemplateLoader loader = new ClassPathTemplateLoaderCustom(layoutFile.getParentFile().getPath(), ".html");
         Handlebars handlebars = new Handlebars(loader);
         template = handlebars.compile("layout");
-        System.out.println(template.text());
+
         Map<String, String> parameterMap = new HashMap<>();
         parameterMap.put("site.titre", "TEST POUR LE SITE");
         String templateString = template.apply(parameterMap);
