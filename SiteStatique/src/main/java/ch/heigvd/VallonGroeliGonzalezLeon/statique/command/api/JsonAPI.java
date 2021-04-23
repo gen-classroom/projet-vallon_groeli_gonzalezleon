@@ -1,6 +1,7 @@
 package ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api;
 
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.util.Util;
+import lombok.Getter;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -26,49 +27,77 @@ public class JsonAPI {
        if (emptyFile.length() > 0) { throw new IllegalArgumentException(); }
       // contenu par défaut
       conf.put("charset", "UTF-8");
-      conf.put("description", "My statique website");
+      conf.put("siteTitle", "My statique website");
       conf.put("keywords", "HTML, CSS, JavaScript");
+      conf.put("domain", "www.monsite.ch");
 
       Util.writeFile(conf.toString(), new FileWriter(emptyFile));
    }
 
    /**
-    * Fonction that return the content of a JSON file as a map.
+    * Fonction that return the content of a JSON file.
     * If the file is empty, it return an empty map
     *
     * @param file file containing the json parameters
     *
-    * @return the map with datas
+    * @return the JsonContent
     *
     * @throws IOException the file must exist and be readable
     */
-   public static Map<String, Object> returnJSONParam(File file) throws IOException {
+   public static JsonContent returnJSONParam(File file) throws IOException {
       String chaine = Util.readFile(new FileReader(file));
-      if (chaine == null || chaine.equals("")) {
-         return Collections.emptyMap();
+      if (chaine.equals("")) {
+         return null;
       }
       JSONObject obj = new JSONObject(chaine);
-      return obj.toMap();
+      return new JsonContent(getStringContent(obj,"charset"),
+              getStringContent(obj,"domain"),
+              getStringContent(obj,"keywords"),
+              getStringContent(obj,"siteTitle"));
    }
 
-   public static String returnHTMLHeader(File json, final String mdContent) throws IOException {
+   private static String getStringContent(JSONObject obj, String key){
+      String getStringContent = null;
+      try {
+         getStringContent = obj.getString(key);
+      }catch (org.json.JSONException exception){
+         // nothing to do here, the parameter is just unspecified
+      }
+      return getStringContent;
+   }
+
+   /*public static String returnHTMLHeader(File json, final String mdContent) throws IOException {
       String header = "<head>\n";
 
-      Map<String, Object> map = JsonAPI.returnJSONParam(json);
+      //Map<String, Object> map = JsonAPI.returnJSONParam(json);
       Scanner scanner = new Scanner(mdContent);
       int i = 0;
       while (scanner.hasNextLine() && i < 3) {
          String[] line = scanner.nextLine().split(":");
-         map.put(line[0], line[1]);
+         //map.put(line[0], line[1]);
          i++;
       }
       scanner.close();
-      header += "\t<meta charset=\"" + map.get("charset") + "\">\n";
-      header += "\t<meta name=\"description\" content=\"" + map.get("description") + "\">\n";
-      header += "\t<meta name=\"keywords\" content=\"" + map.get("keywords") + "\">\n";
-      header += "\t<meta name=\"author\" content=\"" + map.get("auteur") + "\">\n";
-      header += "\t<title>" + map.get("titre") + " " + map.get("date") + "</title>\n";
+      //header += "\t<meta charset=\"" + map.get("charset") + "\">\n";
+      //header += "\t<meta name=\"description\" content=\"" + map.get("description") + "\">\n";
+      //header += "\t<meta name=\"keywords\" content=\"" + map.get("keywords") + "\">\n";
+      //header += "\t<meta name=\"author\" content=\"" + map.get("auteur") + "\">\n";
+      //header += "\t<title>" + map.get("titre") + " " + map.get("date") + "</title>\n";
       header += "</head>\n";
       return header;
+   }*/
+
+   static class JsonContent{
+      @Getter private final String charset;
+      @Getter private final String domain;
+      @Getter private final String keywords;
+      @Getter private final String siteTitle;
+
+      public JsonContent(String charset, String domain, String keywords, String siteTitle){
+         this.charset = charset;
+         this.domain = domain;
+         this.keywords = keywords;
+         this.siteTitle = siteTitle;
+      }
    }
 }

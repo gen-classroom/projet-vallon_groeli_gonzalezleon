@@ -35,8 +35,8 @@ class JsonAPITest {
         File testFile = new File(new File(".").getCanonicalPath() + "/test.json");
         testFile.createNewFile();
         assertTrue(testFile.exists());
-        Map<String, Object> mapEmpty = JsonAPI.returnJSONParam(testFile);
-        assertTrue(mapEmpty.isEmpty());
+        JsonAPI.JsonContent emptyJsonContent = JsonAPI.returnJSONParam(testFile);
+        assertTrue(emptyJsonContent == null);
         testFile.delete();
     }
 
@@ -44,32 +44,17 @@ class JsonAPITest {
     void returnJSONParamWithContentFile() throws IOException {
         File testFile = new File(new File(".").getCanonicalPath() + "/test.json");
         testFile.createNewFile();
-        String testString = "{\n" +
-                "    \"glossary\": {\n" +
-                "        \"title\": \"example glossary\",\n" +
-                "\t\t\"GlossDiv\": {\n" +
-                "            \"title\": \"S\",\n" +
-                "\t\t\t\"GlossList\": {\n" +
-                "                \"GlossEntry\": {\n" +
-                "                    \"ID\": \"SGML\",\n" +
-                "\t\t\t\t\t\"SortAs\": \"SGML\",\n" +
-                "\t\t\t\t\t\"GlossTerm\": \"Standard Generalized Markup Language\",\n" +
-                "\t\t\t\t\t\"Acronym\": \"SGML\",\n" +
-                "\t\t\t\t\t\"Abbrev\": \"ISO 8879:1986\",\n" +
-                "\t\t\t\t\t\"GlossDef\": {\n" +
-                "                        \"para\": \"A meta-markup language, used to create markup languages such as DocBook.\",\n" +
-                "\t\t\t\t\t\t\"GlossSeeAlso\": [\"GML\", \"XML\"]\n" +
-                "                    },\n" +
-                "\t\t\t\t\t\"GlossSee\": \"markup\"\n" +
-                "                }\n" +
-                "            }\n" +
-                "        }\n" +
-                "    }\n" +
-                "}";
+        String testString = "{\"charset\":\"charset\"," +
+                "\"siteTitle\":\"siteTitle\"," +
+                "\"keywords\":\"keywords\"," +
+                "\"domain\":\"domain\"}\n";
         Util.writeFile(testString, new FileWriter(testFile));
         assertTrue(testFile.exists());
-        Map<String, Object> map = JsonAPI.returnJSONParam(testFile);
-        assertTrue(!map.isEmpty());
+        JsonAPI.JsonContent content = JsonAPI.returnJSONParam(testFile);
+        assertTrue(content.getCharset().equals("charset"));
+        assertTrue(content.getDomain().equals("domain"));
+        assertTrue(content.getKeywords().equals("keywords"));
+        assertTrue(content.getSiteTitle().equals("siteTitle"));
         testFile.delete();
     }
 }
