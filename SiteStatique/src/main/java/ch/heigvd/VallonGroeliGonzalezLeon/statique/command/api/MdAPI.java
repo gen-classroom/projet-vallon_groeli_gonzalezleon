@@ -86,8 +86,17 @@ public class MdAPI {
          throw new IllegalArgumentException("The md file did not coincide with the defined syntax.");
       }
       String author = lines[1].split(":")[1];
+      if (author.equals("")){
+         author = null;
+      }
       String date = lines[2].split(":")[1];
+      if (date.equals("")){
+         date = null;
+      }
       String pageTitle = lines[0].split(":")[1];
+      if (pageTitle.equals("")){
+         pageTitle = null;
+      }
       StringBuilder content = new StringBuilder();
       for (int i = 4; i < lines.length; ++i) {
          content.append(lines[i]+"\n");
