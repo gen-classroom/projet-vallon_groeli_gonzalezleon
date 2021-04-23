@@ -6,6 +6,7 @@ import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.TypeSafeTemplate;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.FileTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 
 import java.io.File;
@@ -34,7 +35,7 @@ public class TemplateHTML {
             throw new IllegalArgumentException();
         }
         String defaultContent =
-                "<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">" +
+                "<html lang=\"en\">\n<head>\n<meta charset={{charset}}>" +
                         "\n<title> {{siteTitle}} | {{pageTitle}} </title>\n</head>\n<body>\n" +
                         "{%include menu.html}\n{{content}}\n</body>\n</html>";
 
@@ -43,7 +44,8 @@ public class TemplateHTML {
 
     public String generatePage(File mdFile) throws IOException {
         MdAPI.MdContent mdContent = MdAPI.analyseFile(mdFile);
-        TemplateLoader loader = new ClassPathTemplateLoaderCustom(layoutFile.getParentFile().getPath(), ".html");
+        TemplateLoader loader = new FileTemplateLoader(layoutFile.getParentFile(), ".html");
+        //TemplateLoader loader = new ClassPathTemplateLoaderCustom(layoutFile.getParentFile().getPath(), ".html");
         Handlebars handlebars = new Handlebars(loader);
         template = handlebars.compile("layout");
 
@@ -55,7 +57,7 @@ public class TemplateHTML {
         return templateString;
     }
 
-
+/*  Redefinition pour windows : pb de separateur dans les paths
     class ClassPathTemplateLoaderCustom extends ClassPathTemplateLoader {
 
         private String prefix = "";
@@ -101,4 +103,6 @@ public class TemplateHTML {
             return location;
         }
     }
+
+ */
 }
