@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TemplateHTMLTest {
 
-    private final File currentDirectory = new File(new File(".").getCanonicalPath() + "/mon/site");
+    private final File currentDirectory = new File(new File(".").getCanonicalPath() + "/mon");
 
     TemplateHTMLTest() throws IOException {}
 
