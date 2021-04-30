@@ -42,7 +42,7 @@ class TemplateHTMLTest {
         TemplateHTML template = new TemplateHTML(layout, fileConfig);
 
         String result =
-                "<html lang=\"en\">\n" +
+                "<html lang=\"FR\">\n" +
                         "<head>\n" +
                         "<meta charset=\"UTF-8\">\n" +
                         "<title> My statique website | Mon premier article </title>\n" +
