@@ -23,13 +23,11 @@ class TemplateHTMLTest {
     void setUp() {
         currentDirectory.mkdir();
     }
-/*
+
     @AfterEach
     void tearDown() throws IOException {
         FileUtils.deleteDirectory(currentDirectory);
     }
-
- */
 
     @Test
     void test() throws IOException {
@@ -46,9 +44,19 @@ class TemplateHTMLTest {
         TemplateHTML template = new TemplateHTML(layout, fileConfig);
 
         String result =
-                "<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">" +
-                        "\n<title>TEST POUR LE SITE| {{page.titre}}</title>\n</head>\n<body>\n" +
-                        "{%include menu.html}\n{{content}}\n</body>\n</html>";
+                "<html lang=\"en\">\n" +
+                        "<head>\n" +
+                        "<meta charset=>\n" +
+                        "<title> My statique website | Mon premier article </title>\n" +
+                        "</head>\n" +
+                        "<body>\n" +
+                        "{%include menu.html}\n" +
+                        "<h1>Mon premier article</h1>\n" +
+                        "<h2>Mon sous-titre</h2>\n" +
+                        "<p>Le contenu de mon article.</p>\n" +
+                        "\n" +
+                        "</body>\n" +
+                        "</html>";
 
         String test = template.generatePage(fileIndex);
 
