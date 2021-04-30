@@ -35,7 +35,7 @@ public class TemplateHTML {
             throw new IllegalArgumentException();
         }
         String defaultContent =
-                "<html lang=\"en\">\n<head>\n<meta charset={{{charset}}}>" +
+                "<html lang=\"en\">\n<head>\n<meta charset=\"{{{charset}}}\">" +
                         "\n<title> {{{siteTitle}}} | {{{pageTitle}}} </title>\n</head>\n<body>\n" +
                         "{%include menu.html}\n{{{content}}}\n</body>\n</html>";
 
