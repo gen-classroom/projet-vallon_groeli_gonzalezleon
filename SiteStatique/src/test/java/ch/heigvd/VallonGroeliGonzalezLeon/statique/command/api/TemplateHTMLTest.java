@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TemplateHTMLTest {
 
-    private final File currentDirectory = new File(new File(".").getCanonicalPath() + "/Workspace");
+    private final File currentDirectory = new File(new File(".").getCanonicalPath() + "/mon/site");
 
     TemplateHTMLTest() throws IOException {}
 
@@ -32,14 +32,12 @@ class TemplateHTMLTest {
     @Test
     void test() throws IOException {
         new CommandLine(new Statique()).execute("init", "/mon/site");
-        File testDirectory = new File(new File(".").getCanonicalPath() + "/mon/site");
         File fileIndex = new File(new File(".").getCanonicalPath() + "/mon/site/index.md");
         File fileConfig = new File(new File(".").getCanonicalPath() + "/mon/site/config.json");
         File layout = new File(new File(".").getCanonicalPath() + "/mon/site/template/layout.html");
         assertTrue(fileIndex.exists());
         assertTrue(fileConfig.exists());
         assertTrue(layout.exists());
-        assertTrue(testDirectory.exists());
 
         TemplateHTML template = new TemplateHTML(layout, fileConfig);
 
