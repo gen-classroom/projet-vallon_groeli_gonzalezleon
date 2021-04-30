@@ -44,7 +44,7 @@ class TemplateHTMLTest {
         String result =
                 "<html lang=\"en\">\n" +
                         "<head>\n" +
-                        "<meta charset=>\n" +
+                        "<meta charset=UTF-8>\n" +
                         "<title> My statique website | Mon premier article </title>\n" +
                         "</head>\n" +
                         "<body>\n" +
