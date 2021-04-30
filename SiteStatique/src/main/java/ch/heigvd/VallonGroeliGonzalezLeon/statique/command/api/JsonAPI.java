@@ -30,6 +30,7 @@ public class JsonAPI {
       conf.put("siteTitle", "My statique website");
       conf.put("keywords", "HTML, CSS, JavaScript");
       conf.put("domain", "www.monsite.ch");
+      conf.put("language", "FR");
 
       Util.writeFile(conf.toString(), new FileWriter(emptyFile));
    }
@@ -53,7 +54,9 @@ public class JsonAPI {
       return new JsonContent(getStringContent(obj,"charset"),
               getStringContent(obj,"domain"),
               getStringContent(obj,"keywords"),
-              getStringContent(obj,"siteTitle"));
+              getStringContent(obj,"siteTitle"),
+              getStringContent(obj, "language"));
+
    }
 
    private static String getStringContent(JSONObject obj, String key){
@@ -92,12 +95,15 @@ public class JsonAPI {
       @Getter private final String domain;
       @Getter private final String keywords;
       @Getter private final String siteTitle;
+      @Getter private final String language;
 
-      public JsonContent(String charset, String domain, String keywords, String siteTitle){
+
+      public JsonContent(String charset, String domain, String keywords, String siteTitle, String language){
          this.charset = charset;
          this.domain = domain;
          this.keywords = keywords;
          this.siteTitle = siteTitle;
+         this.language = language;
       }
    }
 }
