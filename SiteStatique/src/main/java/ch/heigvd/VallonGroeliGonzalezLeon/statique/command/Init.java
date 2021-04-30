@@ -8,6 +8,7 @@ package ch.heigvd.VallonGroeliGonzalezLeon.statique.command;
 
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api.JsonAPI;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api.MdAPI;
+import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api.TemplateHTML;
 import org.apache.commons.io.FileUtils;
 import picocli.CommandLine;
 
@@ -28,37 +29,36 @@ public class Init implements Callable<Integer> {
 
     @Override
     public Integer call() throws IOException {
-        if (sitePath != null) {
-            File targetDirectory = new File(new File(".").getCanonicalPath() + sitePath);
-            if (targetDirectory.exists()) {
-                FileUtils.deleteDirectory(targetDirectory);
-            }
-            boolean success = targetDirectory.mkdirs();
-            if (success) {
-                try {
-                    File config = new File(targetDirectory + "/config.json");
-                    File index = new File(targetDirectory + "/index.md");
-
-                    if (config.exists()) {
-                        System.out.println("File already exists.");
-                    } else {
-                        config.createNewFile();
-                        JsonAPI.initJSONConfigFile(config);
-                        System.out.println("File created : " + config.getName());
+        try {
+            if (sitePath != null) {
+                File targetDirectory = new File(new File(".").getCanonicalPath() + sitePath);
+                if (targetDirectory.exists()) {
+                    FileUtils.deleteDirectory(targetDirectory);
+                }
+                if (targetDirectory.mkdirs()) {
+                    File config = new File(targetDirectory.getPath() + "/config.json");
+                    File index = new File(targetDirectory.getPath() + "/index.md");
+                    config.createNewFile();
+                    JsonAPI.initJSONConfigFile(config);
+                    System.out.println("File created : " + config.getName());
+                    index.createNewFile();
+                    MdAPI.initMdIndexFile(index);
+                    System.out.println("File created : " + index.getName());
+                    File templateDir = new File(targetDirectory.getPath() + "/template");
+                    if (templateDir.mkdirs()) {
+                        File layout = new File(templateDir.getPath() + "/layout.html");
+                        layout.createNewFile();
+                        TemplateHTML.initLayoutFile(layout);
+                        System.out.println("File created : " + layout.getName());
                     }
-
-                    if (index.exists()) {
-                        System.out.println("File already exists.");
-                    } else {
-                        index.createNewFile();
-                        MdAPI.initMdIndexFile(index);
-                        System.out.println("File created : " + index.getName());
-                    }
-                } catch (IOException e) {
-                    System.out.println("An error occurred");
-                    e.printStackTrace();
                 }
             }
+        } catch (IOException e) {
+            System.out.println("An error occurred");
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            System.out.println("File not empty");
+            e.printStackTrace();
         }
         return 0;
     }

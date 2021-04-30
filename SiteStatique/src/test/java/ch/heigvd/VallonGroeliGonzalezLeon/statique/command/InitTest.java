@@ -27,17 +27,17 @@ class InitTest {
         FileUtils.deleteDirectory(testDirectory);
     }
 
-
     @Test
     void testInitCreateDirectory() throws IOException {
         new CommandLine(new Statique()).execute("init", "/mon/site");
         File testDirectory = new File(new File(".").getCanonicalPath() + "/mon/site");
         File fileIndex = new File(new File(".").getCanonicalPath() + "/mon/site/index.md");
         File fileConfig = new File(new File(".").getCanonicalPath() + "/mon/site/config.json");
+        File layout = new File(new File(".").getCanonicalPath() + "/mon/site/template/layout.html");
         assertTrue(fileIndex.exists());
         assertTrue(fileConfig.exists());
+        assertTrue(layout.exists());
         assertTrue(testDirectory.exists());
-
     }
 
     @Test
@@ -52,9 +52,11 @@ class InitTest {
         File dir1 = new File(new File(".").getCanonicalPath() + "/mon/site/index.md");
         File fileIndex = new File(new File(".").getCanonicalPath() + "/mon/site/index.md");
         File fileConfig = new File(new File(".").getCanonicalPath() + "/mon/site/config.json");
+        File layout = new File(new File(".").getCanonicalPath() + "/mon/site/template/layout.html");
         assertTrue(dir1.exists());
         assertTrue(fileIndex.exists());
         assertTrue(fileConfig.exists());
+        assertTrue(layout.exists());
         assertFalse(testConfigFile.exists());
     }
 
