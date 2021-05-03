@@ -67,7 +67,6 @@ class BuildTest {
       File index = new File(buildDirectory.getPath() + "/index.html");
       assertTrue(index.exists());
       String content = Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(index))));
-      System.err.println(content);
       content = content.replace("\n","").replace("\r","");
       String expectedContent =
               "<html lang=\"FR\">\n<head>\n<meta charset=\"UTF-8\">\n<title> My statique website | Mon premier " +
