@@ -66,13 +66,13 @@ class BuildTest {
       File index = new File(buildDirectory.getPath() + "/index.html");
       assertTrue(index.exists());
       String content = Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(index))));
-      System.out.println(content);
+      System.err.println(content);
       content = content.replace("\n","").replace("\r","");
       String expectedContent =
               "<html lang=\"FR\">\n<head>\n<meta charset=\"UTF-8\">\n<title> My statique website | Mon premier " +
               "article </title>\n</head>\n<body>\n{%include menu.html}\n<h1>Mon premier article</h1>\n<h2>Mon " +
               "sous-titre</h2>\n<p>Le contenu de mon article.</p>\n\n</body>\n</html>";
-      expectedContent = expectedContent.replace("\n","");
+      expectedContent = expectedContent.replace("\n","").replace("\r","";
       assertEquals(expectedContent, content);
    }
 
