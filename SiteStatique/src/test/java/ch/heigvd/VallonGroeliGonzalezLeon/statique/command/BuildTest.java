@@ -61,7 +61,7 @@ class BuildTest {
 
    @Test
    void testBuildCreatesFileWithGoodContent() throws IOException {
-      File buildDirectory = new File(new File(".").getCanonicalPath() + "/build");
+      File buildDirectory = new File(new File(".").getCanonicalPath() + "\\build");
       new CommandLine(new Statique()).execute("build");
       assertTrue(buildDirectory.exists());
       File index = new File(buildDirectory.getPath() + "/index.html");
