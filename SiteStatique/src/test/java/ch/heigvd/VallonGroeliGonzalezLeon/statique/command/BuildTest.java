@@ -27,12 +27,22 @@ class BuildTest {
    void setUp() throws IOException {
       File testDirectory = new File(new File(".").getCanonicalPath());
       File fileIndex = new File(testDirectory + "/index.md");
+      if (fileIndex.exists()){
+         fileIndex.delete();
+      }
       fileIndex.createNewFile();
       File fileConfig = new File(testDirectory + "/config.json");
+      if (fileConfig.exists()){
+         fileConfig.delete();
+      }
       fileConfig.createNewFile();
       File templateDir = new File(testDirectory.getPath() + "/template");
+
       templateDir.mkdir();
       File layout = new File(testDirectory + "/template/layout.html");
+      if (layout.exists()){
+         layout.delete();
+      }
       layout.createNewFile();
       MdAPI.initMdIndexFile(fileIndex);
       JsonAPI.initJSONConfigFile(fileConfig);
