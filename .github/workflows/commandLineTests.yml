@@ -42,6 +42,8 @@ jobs:
           unzip target/statique.zip
           export PATH=$PATH:`pwd`/statique/bin
           echo '# Test' > index.md
+          statique init /mon
+          cd mon
           statique build
       - name: Test of -h option
         run: |
