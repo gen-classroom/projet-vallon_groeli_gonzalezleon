@@ -72,7 +72,7 @@ class BuildTest {
               "<html lang=\"FR\">\n<head>\n<meta charset=\"UTF-8\">\n<title> My statique website | Mon premier " +
               "article </title>\n</head>\n<body>\n{%include menu.html}\n<h1>Mon premier article</h1>\n<h2>Mon " +
               "sous-titre</h2>\n<p>Le contenu de mon article.</p>\n\n</body>\n</html>";
-      expectedContent = expectedContent.replace("\n","").replace("\r","";
+      expectedContent = expectedContent.replace("\n","").replace("\r","");
       assertEquals(expectedContent, content);
    }
 
