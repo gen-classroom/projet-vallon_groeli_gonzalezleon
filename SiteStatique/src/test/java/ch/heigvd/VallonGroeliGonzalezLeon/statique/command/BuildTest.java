@@ -92,12 +92,15 @@ class BuildTest {
    void testBuildWorksRecursivelyWithImages() throws IOException {
       File subDir = new File(new File(".").getCanonicalPath() + "/tmpDir");
       subDir.mkdir();
+      File pngFile = new File(subDir.getPath() + "/image.png");
+      Util.writeFile("adoasihdoa",
+                     new BufferedWriter(new OutputStreamWriter(new FileOutputStream(pngFile), StandardCharsets.UTF_8)));
       DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
       LocalDateTime now = LocalDateTime.now();
       String fileContent =
               "titre:Mon premier article\n" + "auteur:John Smith\n" + "date:" + dtf.format(now) + "\n" + "---\n";
       File mdFileSub = new File(subDir.getPath() + "/test.md");
-      Util.writeFile(fileContent+"# Test\n## esperons que ça marche\n", new BufferedWriter(
+      Util.writeFile(fileContent + "# Test\n## esperons que ça marche\n", new BufferedWriter(
               new OutputStreamWriter(new FileOutputStream(mdFileSub), StandardCharsets.UTF_8)));
 
       File buildDirectory = new File(new File(".").getCanonicalPath() + "\\build");
@@ -113,6 +116,8 @@ class BuildTest {
               ".html}\n<h1>Test</h1>\n<h2>esperons que ça marche</h2>\n\n</body>\n</html>";
       expectedContent = expectedContent.replace("\n", "").replace("\r", "");
       assertEquals(expectedContent, content);
+      File transferedImages = new File(buildDirectory.getPath() + "/tmpDir/image.png");
+      assertTrue(transferedImages.exists());
       FileUtils.deleteDirectory(subDir);
    }
 
