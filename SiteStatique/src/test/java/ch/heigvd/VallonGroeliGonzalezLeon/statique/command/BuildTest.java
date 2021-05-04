@@ -17,6 +17,8 @@ import picocli.CommandLine;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -27,12 +29,12 @@ class BuildTest {
    void setUp() throws IOException {
       File testDirectory = new File(new File(".").getCanonicalPath());
       File fileIndex = new File(testDirectory + "/index.md");
-      if (fileIndex.exists()){
+      if (fileIndex.exists()) {
          fileIndex.delete();
       }
       fileIndex.createNewFile();
       File fileConfig = new File(testDirectory + "/config.json");
-      if (fileConfig.exists()){
+      if (fileConfig.exists()) {
          fileConfig.delete();
       }
       fileConfig.createNewFile();
@@ -40,7 +42,7 @@ class BuildTest {
 
       templateDir.mkdir();
       File layout = new File(testDirectory + "/template/layout.html");
-      if (layout.exists()){
+      if (layout.exists()) {
          layout.delete();
       }
       layout.createNewFile();
@@ -77,13 +79,52 @@ class BuildTest {
       File index = new File(buildDirectory.getPath() + "/index.html");
       assertTrue(index.exists());
       String content = Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(index))));
-      content = content.replace("\n","").replace("\r","");
+      content = content.replace("\n", "").replace("\r", "");
       String expectedContent =
               "<html lang=\"FR\">\n<head>\n<meta charset=\"UTF-8\">\n<title> My statique website | Mon premier " +
               "article </title>\n</head>\n<body>\n{%include menu.html}\n<h1>Mon premier article</h1>\n<h2>Mon " +
               "sous-titre</h2>\n<p>Le contenu de mon article.</p>\n\n</body>\n</html>";
-      expectedContent = expectedContent.replace("\n","").replace("\r","");
+      expectedContent = expectedContent.replace("\n", "").replace("\r", "");
       assertEquals(expectedContent, content);
+   }
+
+   @Test
+   void testBuildWorksRecursively() throws IOException {
+      File subDir = new File(new File(".").getCanonicalPath() + "/tmpDir");
+      subDir.mkdir();
+      DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+      LocalDateTime now = LocalDateTime.now();
+      String fileContent =
+              "titre:Mon premier article\n" + "auteur:John Smith\n" + "date:" + dtf.format(now) + "\n" + "---\n";
+      File mdFileSub = new File(subDir.getPath() + "/test.md");
+      Util.writeFile(fileContent+"# Test\n## esperons que ça marche\n", new BufferedWriter(
+              new OutputStreamWriter(new FileOutputStream(mdFileSub), StandardCharsets.UTF_8)));
+
+      File buildDirectory = new File(new File(".").getCanonicalPath() + "\\build");
+      new CommandLine(new Statique()).execute("build");
+      assertTrue(buildDirectory.exists());
+      File index = new File(buildDirectory.getPath() + "/index.html");
+      assertTrue(index.exists());
+      String content = Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(index))));
+      content = content.replace("\n", "").replace("\r", "");
+      String expectedContent =
+              "<html lang=\"FR\">\n<head>\n<meta charset=\"UTF-8\">\n<title> My statique website | Mon premier " +
+              "article </title>\n</head>\n<body>\n{%include menu.html}\n<h1>Mon premier article</h1>\n<h2>Mon " +
+              "sous-titre</h2>\n<p>Le contenu de mon article.</p>\n\n</body>\n</html>";
+      expectedContent = expectedContent.replace("\n", "").replace("\r", "");
+      assertEquals(expectedContent, content);
+
+      File subHtmlFile = new File(buildDirectory.getPath() + "/tmpDir/test.html");
+      assertTrue(subHtmlFile.exists());
+      content = Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(subHtmlFile))));
+      content = content.replace("\n", "").replace("\r", "");
+      expectedContent =
+              "<html lang=\"FR\">\n<head>\n<meta charset=\"UTF-8\">\n<title> My statique website | Mon premier " +
+              "article </title>\n</head>\n<body>\n{%include menu" +
+              ".html}\n<h1>Test</h1>\n<h2>esperons que ça marche</h2>\n\n</body>\n</html>";
+      expectedContent = expectedContent.replace("\n", "").replace("\r", "");
+      assertEquals(expectedContent, content);
+      FileUtils.deleteDirectory(subDir);
    }
 
 }
