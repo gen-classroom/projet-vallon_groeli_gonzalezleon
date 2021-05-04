@@ -5,10 +5,7 @@
  */
 package ch.heigvd.VallonGroeliGonzalezLeon.statique.command;
 
-
-import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api.JsonAPI;
-import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api.MdAPI;
-import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api.TemplateHTML;
+import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api.*;
 import org.apache.commons.io.FileUtils;
 import picocli.CommandLine;
 
@@ -28,7 +25,7 @@ public class Init implements Callable<Integer> {
     String sitePath;
 
     @Override
-    public Integer call() throws IOException {
+    public Integer call()  {
         try {
             if (sitePath != null) {
                 File targetDirectory = new File(new File(".").getCanonicalPath() + sitePath);
