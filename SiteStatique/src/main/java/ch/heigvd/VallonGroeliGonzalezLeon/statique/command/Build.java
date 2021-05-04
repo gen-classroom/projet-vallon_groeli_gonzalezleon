@@ -1,7 +1,6 @@
 package ch.heigvd.VallonGroeliGonzalezLeon.statique.command;
 
 
-import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api.MdAPI;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api.TemplateHTML;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.util.Util;
 import org.apache.commons.io.FileUtils;
@@ -19,8 +18,9 @@ import java.util.concurrent.Callable;
                                    "files, they will be copied to the corresponding build file.\n" +
                                    "If the config file, the layout file or the main md file are missing from their" +
                                    " normal location, the command will return 1 and delete the build directory\n" +
-                                   "In case of an error while writing or reading the command will return 2 and clean " +
-                                   "the build directory.\n")
+                                   "In case of an error while writing or reading the command will return 2\n" +
+                                   "The program will also compile all md files in subdirectories of the current " +
+                                   "directory. ")
 public class Build implements Callable<Integer> {
 
    @Override
@@ -68,6 +68,7 @@ public class Build implements Callable<Integer> {
          System.err.println("Error while reading the layout and config file");
          return 2;
       }
+
       String indexContent;
       try {
          indexContent = templateHTML.generatePage(mdIndexFile);
@@ -81,13 +82,59 @@ public class Build implements Callable<Integer> {
          File indexHtmlFile = new File(buildDirectory.getPath() + "/index.html");
          Util.writeFile(indexContent, new BufferedWriter(
                  new OutputStreamWriter(new FileOutputStream(indexHtmlFile), StandardCharsets.UTF_8)));
-         Util.copyImages(currentDirectory,buildDirectory);
+         Util.copyImages(currentDirectory, buildDirectory);
       } catch (IOException e) {
          System.err.println("Error while writing the html file");
          return 2;
       }
 
+      for (File f : currentDirectory.listFiles()) {
+         if (f.isDirectory() && !f.getName().equals("build")) {
+            File futurBuildDir = new File(buildDirectory.getPath() + "/" + f.getName());
+            futurBuildDir.mkdir();
+            try {
+               recursiveBuild(templateHTML, f, futurBuildDir);
+            } catch (IOException e) {
+               return 2;
+            }
+         }
+      }
+
       return 0;
+   }
+
+   private void recursiveBuild(TemplateHTML templateHTML, File currentDir, File currentBuildDir) throws IOException {
+      if (currentDir.listFiles() != null) {
+         for (File f : currentDir.listFiles()) {
+            if (f.getName().contains(".md")) {
+               String htmlContent;
+               try {
+                  htmlContent = templateHTML.generatePage(f);
+               } catch (IOException e) {
+                  System.err.println("Error while reading the mdFile");
+                  throw e;
+               }
+               try {
+                  String fileName = "/" + f.getName().replace(".md", "") + ".html";
+                  File indexHtmlFile =
+                          new File(currentBuildDir.getPath() + fileName);
+                  Util.writeFile(htmlContent, new BufferedWriter(
+                          new OutputStreamWriter(new FileOutputStream(indexHtmlFile), StandardCharsets.UTF_8)));
+                  Util.copyImages(currentDir, currentBuildDir);
+               } catch (IOException e) {
+                  System.err.println("Error while writing the html file");
+                  throw e;
+               }
+            }
+         }
+         for (File f : currentDir.listFiles()) {
+            if (f.isDirectory() && !f.getName().equals("build")) {
+               File futurBuildDir = new File(currentBuildDir.getPath() + "/" + f.getName());
+               futurBuildDir.mkdir();
+               recursiveBuild(templateHTML, f, futurBuildDir);
+            }
+         }
+      }
    }
 
 
