@@ -39,45 +39,6 @@ public class MdAPI {
       Util.writeFile(defaultContent, new FileWriter(emptyFile));
    }
 
-   /**
-    * This function creates, from a basic markdown file index.md that must be located in currentDirectory, a html file
-    * located in the buildDirectory, that replicates the structure of the markdown file
-    *
-    * @param buildDirectory   The directory where the html file must be stored
-    * @param currentDirectory The directory where the MarkDown file is located
-    *
-    * @return - 0 if the creation of the html file was done without problem
-    *         - 1 If the file index.md does not exist in currentDirectory
-    *         - 2 if there was an issue while writing to the index.html file in the buildDirectory
-    */
-   public static int createIndexPage(File buildDirectory, File currentDirectory) {
-      try {
-         File mdFile = new File(currentDirectory.getPath() + "/index.md");
-         if (!mdFile.exists()) {
-            return 1;
-         }
-
-         String content = Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(mdFile))));
-         //String header = JsonAPI.returnHTMLHeader(new File(currentDirectory.getPath() + "/config.json"), content);
-         String header = "";
-         Parser parser = Parser.builder().build();
-         Node document = parser.parse(content);
-         HtmlRenderer renderer = HtmlRenderer.builder().build();
-         File htmlFile = new File(buildDirectory.getPath() + "/index.html");
-         //Util.writeFile(header, new BufferedWriter(
-         //        new OutputStreamWriter(new FileOutputStream(htmlFile), StandardCharsets.UTF_8)));
-         String htmlContent =
-                 "<!DOCTYPE html>\n" + "<html>\n" + header + "<body>\n" + renderer.render(document) + "\n</body>" +
-                 " \n</html>";
-         Util.writeFile(htmlContent, new BufferedWriter(
-                 new OutputStreamWriter(new FileOutputStream(htmlFile), StandardCharsets.UTF_8)));
-      } catch (IOException e) {
-         System.err.println("Error while reading or writing the file");
-         e.printStackTrace();
-         return 2;
-      }
-      return 0;
-   }
 
    public static MdContent analyseFile(File mdFile) throws IOException {
       String md = Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(mdFile))));

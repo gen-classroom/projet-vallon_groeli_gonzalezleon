@@ -45,7 +45,7 @@ public class JsonAPI {
     *
     * @throws IOException the file must exist and be readable
     */
-   public static JsonContent returnJSONParam(File file) throws IOException {
+   public static JsonContent analyseFile(File file) throws IOException {
       String chaine = Util.readFile(new FileReader(file));
       if (chaine.equals("")) {
          return null;
@@ -68,27 +68,6 @@ public class JsonAPI {
       }
       return getStringContent;
    }
-
-   /*public static String returnHTMLHeader(File json, final String mdContent) throws IOException {
-      String header = "<head>\n";
-
-      //Map<String, Object> map = JsonAPI.returnJSONParam(json);
-      Scanner scanner = new Scanner(mdContent);
-      int i = 0;
-      while (scanner.hasNextLine() && i < 3) {
-         String[] line = scanner.nextLine().split(":");
-         //map.put(line[0], line[1]);
-         i++;
-      }
-      scanner.close();
-      //header += "\t<meta charset=\"" + map.get("charset") + "\">\n";
-      //header += "\t<meta name=\"description\" content=\"" + map.get("description") + "\">\n";
-      //header += "\t<meta name=\"keywords\" content=\"" + map.get("keywords") + "\">\n";
-      //header += "\t<meta name=\"author\" content=\"" + map.get("auteur") + "\">\n";
-      //header += "\t<title>" + map.get("titre") + " " + map.get("date") + "</title>\n";
-      header += "</head>\n";
-      return header;
-   }*/
 
    static class JsonContent{
       @Getter private final String charset;
