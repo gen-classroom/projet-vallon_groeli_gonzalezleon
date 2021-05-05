@@ -45,6 +45,7 @@ jobs:
           statique init /mon
           cd mon
           statique build
+          rm -r build
       - name: Test of -h option
         run: |
           cd SiteStatique
