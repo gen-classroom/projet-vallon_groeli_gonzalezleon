@@ -67,6 +67,7 @@ jobs:
       - name: Test of version option
         run: |
           cd SiteStatique
+          ls
           mvn clean install
           rm -fr statique
           unzip target/statique.zip
