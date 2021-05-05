@@ -68,7 +68,7 @@ jobs:
         run: |
           cd SiteStatique
           rm -r mon
-          rm -r 'mon\\build'
+          rm -r 'mon\build'
           ls
           mvn clean install
           rm -fr statique
