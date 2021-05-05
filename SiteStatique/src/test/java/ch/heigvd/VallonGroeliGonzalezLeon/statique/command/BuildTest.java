@@ -106,7 +106,7 @@ class BuildTest {
       File buildDirectory = new File(new File(".").getCanonicalPath() + "\\build");
       new CommandLine(new Statique()).execute("build");
 
-      File subHtmlFile = new File(buildDirectory.getPath() + "/tmpDir/test.html");
+      File subHtmlFile = new File(buildDirectory.getPath() + "\\tmpDir\\test.html");
       assertTrue(subHtmlFile.exists());
       String content = Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(subHtmlFile))));
       content = content.replace("\n", "").replace("\r", "");
@@ -116,7 +116,7 @@ class BuildTest {
               ".html}\n<h1>Test</h1>\n<h2>esperons que ça marche</h2>\n\n</body>\n</html>";
       expectedContent = expectedContent.replace("\n", "").replace("\r", "");
       assertEquals(expectedContent, content);
-      File transferedImages = new File(buildDirectory.getPath() + "/tmpDir/image.png");
+      File transferedImages = new File(buildDirectory.getPath() + "\\tmpDir\\image.png");
       assertTrue(transferedImages.exists());
       FileUtils.deleteDirectory(subDir);
    }
