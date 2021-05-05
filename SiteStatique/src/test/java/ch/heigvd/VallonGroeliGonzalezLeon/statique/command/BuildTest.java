@@ -108,7 +108,8 @@ class BuildTest {
 
       File subHtmlFile = new File(buildDirectory.getPath() + "/tmpDir/test.html");
       assertTrue(subHtmlFile.exists());
-      String content = Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(subHtmlFile))));
+      String content = Util.readFile(
+              new BufferedReader(new InputStreamReader(new FileInputStream(subHtmlFile), StandardCharsets.UTF_8)));
       content = content.replace("\n", "").replace("\r", "");
       String expectedContent =
               "<html lang=\"FR\">\n<head>\n<meta charset=\"UTF-8\">\n<title> My statique website | Mon premier " +

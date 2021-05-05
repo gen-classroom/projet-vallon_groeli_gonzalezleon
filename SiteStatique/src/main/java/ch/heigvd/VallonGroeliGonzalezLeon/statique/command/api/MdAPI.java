@@ -41,7 +41,8 @@ public class MdAPI {
 
 
    public static MdContent analyseFile(File mdFile) throws IOException {
-      String md = Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(mdFile))));
+      String md = Util.readFile(
+              new BufferedReader(new InputStreamReader(new FileInputStream(mdFile), StandardCharsets.UTF_8)));
       String[] lines = md.split("\\r?\\n|\\r");
       if (lines.length < 4) {
          throw new IllegalArgumentException("The md file did not coincide with the defined syntax.");
