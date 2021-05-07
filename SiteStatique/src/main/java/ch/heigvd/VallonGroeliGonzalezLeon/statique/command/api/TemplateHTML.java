@@ -4,16 +4,12 @@ import ch.heigvd.VallonGroeliGonzalezLeon.statique.util.Util;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.TypeSafeTemplate;
-import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.FileTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +23,7 @@ public class TemplateHTML {
     public TemplateHTML(File layoutFile, File configFile) throws IOException {
         this.layoutFile = layoutFile;
         this.configFile = configFile;
-        jsonContent = JsonAPI.returnJSONParam(configFile);
+        jsonContent = JsonAPI.analyseFile(configFile);
     }
 
     public static void initLayoutFile(File emptyFile) throws IllegalArgumentException, IOException {

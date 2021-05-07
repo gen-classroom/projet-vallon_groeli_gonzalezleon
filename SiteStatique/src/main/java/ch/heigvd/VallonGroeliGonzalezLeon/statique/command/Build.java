@@ -91,7 +91,6 @@ public class Build implements Callable<Integer> {
       for (File f : currentDirectory.listFiles()) {
          if (f.isDirectory() && !f.getName().equals("build")) {
             File futurBuildDir = new File(buildDirectory.getPath() + "/" + f.getName());
-            futurBuildDir.mkdir();
             try {
                recursiveBuild(templateHTML, f, futurBuildDir);
             } catch (IOException e) {
@@ -107,6 +106,7 @@ public class Build implements Callable<Integer> {
       if (currentDir.listFiles() != null) {
          for (File f : currentDir.listFiles()) {
             if (f.getName().contains(".md")) {
+               currentBuildDir.mkdir();
                String htmlContent;
                try {
                   htmlContent = templateHTML.generatePage(f);
@@ -130,7 +130,6 @@ public class Build implements Callable<Integer> {
          for (File f : currentDir.listFiles()) {
             if (f.isDirectory() && !f.getName().equals("build")) {
                File futurBuildDir = new File(currentBuildDir.getPath() + "/" + f.getName());
-               futurBuildDir.mkdir();
                recursiveBuild(templateHTML, f, futurBuildDir);
             }
          }

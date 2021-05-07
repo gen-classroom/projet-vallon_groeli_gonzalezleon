@@ -4,13 +4,8 @@ import ch.heigvd.VallonGroeliGonzalezLeon.statique.util.Util;
 import lombok.Getter;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Scanner;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 
 public class JsonAPI {
@@ -24,7 +19,7 @@ public class JsonAPI {
     */
    public static void initJSONConfigFile(File emptyFile) throws IOException, IllegalArgumentException {
       JSONObject conf = new JSONObject();
-       if (emptyFile.length() > 0) { throw new IllegalArgumentException(); }
+      if (emptyFile.length() > 0) { throw new IllegalArgumentException(); }
       // contenu par défaut
       conf.put("charset", "UTF-8");
       conf.put("siteTitle", "My statique website");
@@ -45,52 +40,30 @@ public class JsonAPI {
     *
     * @throws IOException the file must exist and be readable
     */
-   public static JsonContent returnJSONParam(File file) throws IOException {
-      String chaine = Util.readFile(new FileReader(file));
+   public static JsonContent analyseFile(File file) throws IOException {
+      String chaine = Util.readFile(
+              new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)));
       if (chaine.equals("")) {
          return null;
       }
       JSONObject obj = new JSONObject(chaine);
-      return new JsonContent(getStringContent(obj,"charset"),
-              getStringContent(obj,"domain"),
-              getStringContent(obj,"keywords"),
-              getStringContent(obj,"siteTitle"),
-              getStringContent(obj, "language"));
+      return new JsonContent(getStringContent(obj, "charset"), getStringContent(obj, "domain"),
+                             getStringContent(obj, "keywords"), getStringContent(obj, "siteTitle"),
+                             getStringContent(obj, "language"));
 
    }
 
-   private static String getStringContent(JSONObject obj, String key){
+   private static String getStringContent(JSONObject obj, String key) {
       String getStringContent = null;
       try {
          getStringContent = obj.getString(key);
-      }catch (org.json.JSONException exception){
+      } catch (org.json.JSONException exception) {
          // nothing to do here, the parameter is just unspecified
       }
       return getStringContent;
    }
 
-   /*public static String returnHTMLHeader(File json, final String mdContent) throws IOException {
-      String header = "<head>\n";
-
-      //Map<String, Object> map = JsonAPI.returnJSONParam(json);
-      Scanner scanner = new Scanner(mdContent);
-      int i = 0;
-      while (scanner.hasNextLine() && i < 3) {
-         String[] line = scanner.nextLine().split(":");
-         //map.put(line[0], line[1]);
-         i++;
-      }
-      scanner.close();
-      //header += "\t<meta charset=\"" + map.get("charset") + "\">\n";
-      //header += "\t<meta name=\"description\" content=\"" + map.get("description") + "\">\n";
-      //header += "\t<meta name=\"keywords\" content=\"" + map.get("keywords") + "\">\n";
-      //header += "\t<meta name=\"author\" content=\"" + map.get("auteur") + "\">\n";
-      //header += "\t<title>" + map.get("titre") + " " + map.get("date") + "</title>\n";
-      header += "</head>\n";
-      return header;
-   }*/
-
-   static class JsonContent{
+   static class JsonContent {
       @Getter private final String charset;
       @Getter private final String domain;
       @Getter private final String keywords;
@@ -98,7 +71,7 @@ public class JsonAPI {
       @Getter private final String language;
 
 
-      public JsonContent(String charset, String domain, String keywords, String siteTitle, String language){
+      public JsonContent(String charset, String domain, String keywords, String siteTitle, String language) {
          this.charset = charset;
          this.domain = domain;
          this.keywords = keywords;
