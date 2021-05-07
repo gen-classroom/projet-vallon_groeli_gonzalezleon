@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: "Build & test"
         run: |
-          mvn -B clean install --file pom.xml
+          mvn -B clean install --file SiteStatique/pom.xml
           echo "done!"
 
       - uses: "marvinpinto/action-automatic-releases@latest"
