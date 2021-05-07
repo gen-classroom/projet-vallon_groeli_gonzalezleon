@@ -13,6 +13,7 @@ jobs:
     steps:
       - name: "Build & test"
         run: |
+          ls
           cd SiteStatique
           mvn -B clean install --file pom.xml
           echo "done!"
