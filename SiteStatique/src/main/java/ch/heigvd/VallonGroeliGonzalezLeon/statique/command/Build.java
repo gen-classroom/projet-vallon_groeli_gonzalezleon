@@ -102,6 +102,13 @@ public class Build implements Callable<Integer> {
       return 0;
    }
 
+   /**
+    * Creates html files from md in subdirs, and translates all the images found
+    * @param templateHTML
+    * @param currentDir
+    * @param currentBuildDir
+    * @throws IOException
+    */
    private void recursiveBuild(TemplateHTML templateHTML, File currentDir, File currentBuildDir) throws IOException {
       if (currentDir.listFiles() != null) {
          for (File f : currentDir.listFiles()) {
@@ -120,13 +127,13 @@ public class Build implements Callable<Integer> {
                           new File(currentBuildDir.getPath() + fileName);
                   Util.writeFile(htmlContent, new BufferedWriter(
                           new OutputStreamWriter(new FileOutputStream(indexHtmlFile), StandardCharsets.UTF_8)));
-                  Util.copyImages(currentDir, currentBuildDir);
                } catch (IOException e) {
                   System.err.println("Error while writing the html file");
                   throw e;
                }
             }
          }
+         Util.copyImages(currentDir,currentBuildDir);
          for (File f : currentDir.listFiles()) {
             if (f.isDirectory() && !f.getName().equals("build")) {
                File futurBuildDir = new File(currentBuildDir.getPath() + "/" + f.getName());
