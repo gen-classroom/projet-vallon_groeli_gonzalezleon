@@ -4,6 +4,7 @@ package ch.heigvd.VallonGroeliGonzalezLeon.statique.command;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api.TemplateHTML;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.util.Util;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import picocli.CommandLine;
 
 import java.io.*;
@@ -230,11 +231,7 @@ public class Build implements Callable<Integer> {
             return DIRECTORY;
          }
          String name = file.getName();
-         String[] splitResult = name.split(".");
-         if (splitResult.length <= 1) {
-            return OTHER;
-         }
-         switch (splitResult[splitResult.length - 1].toLowerCase()) {
+         switch (FilenameUtils.getExtension(name).toLowerCase()) {
             case "md":
                return MD;
             case "html":
