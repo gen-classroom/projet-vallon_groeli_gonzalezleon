@@ -58,13 +58,17 @@ public class Util {
     * @throws IOException if there is an issue while reading the file
     */
    public static String readFile(Reader reader) throws IOException {
-      int c = reader.read();
       StringBuilder result = new StringBuilder();
-      while (c != -1) {
-         result.append((char) c);
-         c = reader.read();
+      try {
+         int c = reader.read();
+         while (c != -1) {
+            result.append((char) c);
+            c = reader.read();
+         }
+      }catch (IOException e ) {
+         reader.close();
+         throw e;
       }
-      reader.close();
       return result.toString();
    }
 
@@ -77,8 +81,12 @@ public class Util {
     * @throws IOException if there is an issue while using the given writer
     */
    public static void writeFile(String content, Writer writer) throws IOException {
-      writer.write(content);
-      writer.flush();
-      writer.close();
+      try {
+         writer.write(content);
+         writer.flush();
+      } catch (IOException e) {
+         writer.close();
+         throw e;
+      }
    }
 }
