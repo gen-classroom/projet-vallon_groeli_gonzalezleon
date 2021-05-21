@@ -128,15 +128,17 @@ public class Build implements Callable<Integer> {
                   WatchEvent<Path> ev = (WatchEvent<Path>) event;
                   Path filename = ev.context();
 
-                  Path child = dir.resolve(filename);
-                  if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
-
-                  } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
-
-                  } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
-
+                  switch (FileType.getFileTypeFromFile(filename.toFile(),currentDirectory)){
+                     case MD:
+                        break;
+                     case IMAGE:
+                        break;
+                     case CONFIG:
+                     case LAYOUT:
+                        break;
+                     case DIRECTORY:
+                        break;
                   }
-
                }
                key.reset();
                key = watcher.take();
@@ -146,6 +148,36 @@ public class Build implements Callable<Integer> {
          e.printStackTrace();
       }
       return 0;
+   }
+
+   private void handleMd(WatchEvent<Path> event, File baseDirectory, File buildDirectory, TemplateHTML templateHTML){
+      // /site/machin/2/4/truc/test.md -> /site/build/machin/2/4/truc/test.md
+      WatchEvent.Kind<?> kind = event.kind();
+      if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
+
+      } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
+
+      } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
+
+      }
+   }
+
+   private void handleConfigAndLayout(WatchEvent<Path> event){
+      WatchEvent.Kind<?> kind = event.kind();
+      if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
+
+      } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
+
+      } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
+
+      }
+   }
+
+   private void handleDirectory(){
+
+   }
+   private void handleImage(){
+
    }
 
    /**
@@ -202,7 +234,7 @@ public class Build implements Callable<Integer> {
          if (splitResult.length <= 1) {
             return OTHER;
          }
-         switch (splitResult[splitResult.length - 1]) {
+         switch (splitResult[splitResult.length - 1].toLowerCase()) {
             case "md":
                return MD;
             case "html":
@@ -216,8 +248,8 @@ public class Build implements Callable<Integer> {
                   return CONFIG;
                }
                break;
-            case ".png":
-            case ".jpg":
+            case "png":
+            case "jpg":
                return IMAGE;
          }
          return OTHER;

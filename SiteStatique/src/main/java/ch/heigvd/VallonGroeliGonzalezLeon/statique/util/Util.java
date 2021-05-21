@@ -35,7 +35,7 @@ public class Util {
    public static int copyImages(File currentDirectory, File buildDirectory) {
       File[] files = currentDirectory.listFiles();
       for (File f : files) {
-         if (f.isFile() && imageExtensionSupported.contains(FilenameUtils.getExtension(f.getName()))) {
+         if (f.isFile() && imageExtensionSupported.contains(FilenameUtils.getExtension(f.getName().toLowerCase()))) {
             File destFile = new File(buildDirectory.getPath() + "/" + f.getName());
             try {
                FileUtils.copyFile(f, destFile);
