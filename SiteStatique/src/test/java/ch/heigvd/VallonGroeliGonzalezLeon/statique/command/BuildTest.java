@@ -122,4 +122,18 @@ class BuildTest {
       FileUtils.deleteDirectory(subDir);
    }
 
+   @Test
+   void fileTypeWorksCorrectly() throws IOException {
+      File testDirectory = new File(new File(".").getCanonicalPath());
+      File fileIndex = new File(testDirectory + "/index.md");
+      File fileConfig = new File(testDirectory + "/config.json");
+      File templateFile = new File(testDirectory.getPath() + "/template/layout.html");
+      assertEquals(Build.FileType.CONFIG, Build.FileType.getFileTypeFromFile(fileConfig,testDirectory));
+      assertEquals(Build.FileType.LAYOUT,Build.FileType.getFileTypeFromFile(templateFile,testDirectory));
+      assertEquals(Build.FileType.MD,Build.FileType.getFileTypeFromFile(fileIndex,testDirectory));
+      assertEquals(Build.FileType.DIRECTORY,Build.FileType.getFileTypeFromFile(testDirectory,testDirectory));
+      File tmp = new File(testDirectory+"/tmp.txt");
+      assertEquals(Build.FileType.OTHER,Build.FileType.getFileTypeFromFile(tmp,testDirectory));
+
+   }
 }
