@@ -10,7 +10,7 @@ Ce projet créé par le groupe vallon_groeli_gonzalezleon a été créé sur git
 
 3. Serve 
 
-4. new
+4. Init
 
 
 # Utilisation
