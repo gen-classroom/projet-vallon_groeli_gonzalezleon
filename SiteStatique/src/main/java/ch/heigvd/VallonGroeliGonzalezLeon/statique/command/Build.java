@@ -150,17 +150,35 @@ public class Build implements Callable<Integer> {
       return 0;
    }
 
-   private void handleMd(WatchEvent<Path> event, File baseDirectory, File buildDirectory, TemplateHTML templateHTML){
+
+   private void handleMd(WatchEvent<Path> event, File baseDirectory, TemplateHTML templateHTML){
       // /site/machin/2/4/truc/test.md -> /site/build/machin/2/4/truc/test.md
       WatchEvent.Kind<?> kind = event.kind();
-      if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
+      Path fileModified = event.context();
+      Path finalPathInMD = Util.generatePathInBuildDirectory(Paths.get(baseDirectory.getPath()), fileModified);
+      File fileHTML = new File(finalPathInMD.toString().replace(".md", ".html"));
+      //File toEdit = buildDirectory.getPath() + " / " + fileModified.
 
+      if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
+         try {
+            createHTMLPage(templateHTML,fileModified.toFile(), finalPathInMD.getParent().toFile());
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
       } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
+         fileHTML.delete();
+         try {
+            createHTMLPage(templateHTML,fileModified.toFile(), finalPathInMD.getParent().toFile());
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
 
       } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
-
+         fileHTML.delete();
       }
    }
+
+
 
    private void handleConfigAndLayout(WatchEvent<Path> event){
       WatchEvent.Kind<?> kind = event.kind();
@@ -192,24 +210,9 @@ public class Build implements Callable<Integer> {
    private void recursiveBuild(TemplateHTML templateHTML, File currentDir, File currentBuildDir) throws IOException {
       if (currentDir.listFiles() != null) {
          for (File f : currentDir.listFiles()) {
-            if (f.getName().contains(".md")) {
+            if (f.getName().toLowerCase().endsWith(".md")) {
                currentBuildDir.mkdir();
-               String htmlContent;
-               try {
-                  htmlContent = templateHTML.generatePage(f);
-               } catch (IOException e) {
-                  System.err.println("Error while reading the mdFile");
-                  throw e;
-               }
-               try {
-                  String fileName = "/" + f.getName().replace(".md", "") + ".html";
-                  File indexHtmlFile = new File(currentBuildDir.getPath() + fileName);
-                  Util.writeFile(htmlContent, new BufferedWriter(
-                          new OutputStreamWriter(new FileOutputStream(indexHtmlFile), StandardCharsets.UTF_8)));
-               } catch (IOException e) {
-                  System.err.println("Error while writing the html file");
-                  throw e;
-               }
+               createHTMLPage(templateHTML, f, currentBuildDir);
             }
          }
          Util.copyImages(currentDir, currentBuildDir);
@@ -219,6 +222,25 @@ public class Build implements Callable<Integer> {
                recursiveBuild(templateHTML, f, futurBuildDir);
             }
          }
+      }
+   }
+
+   private void createHTMLPage(TemplateHTML templateHTML, File mdFile,  File targetDirectory) throws IOException {
+      String htmlContent;
+      try {
+         htmlContent = templateHTML.generatePage(mdFile);
+      } catch (IOException e) {
+         System.err.println("Error while reading the mdFile");
+         throw e;
+      }
+      try {
+         String fileName = "/" + mdFile.getName().replace(".md", "") + ".html";
+         File indexHtmlFile = new File(targetDirectory.getPath() + fileName);
+         Util.writeFile(htmlContent, new BufferedWriter(
+                 new OutputStreamWriter(new FileOutputStream(indexHtmlFile), StandardCharsets.UTF_8)));
+      } catch (IOException e) {
+         System.err.println("Error while writing the html file");
+         throw e;
       }
    }
 

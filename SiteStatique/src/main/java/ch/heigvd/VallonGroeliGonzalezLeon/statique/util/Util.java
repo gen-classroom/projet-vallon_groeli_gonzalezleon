@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -86,5 +88,16 @@ public class Util {
       }finally {
          writer.close();
       }
+   }
+
+   /**
+    *
+    * @param baseDirectory
+    * @param file
+    * @return
+    */
+   public static Path generatePathInBuildDirectory(Path baseDirectory, Path file){
+      String endOfPath = file.toString().substring(baseDirectory.toString().length());
+      return Paths.get(baseDirectory.toString() + "/build/" + endOfPath);
    }
 }
