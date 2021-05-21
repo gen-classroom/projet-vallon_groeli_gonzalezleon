@@ -105,6 +105,16 @@ public class Build implements Callable<Integer> {
       if (!watching) {
          return 0;
       }
+      /**
+       * Ajouter un warning : ne pas modifier le dossier build (supprimer,...) pendant que la commande tourne en
+       * background, ni le nom du dossier template
+       *
+       * - md : recompiler fichier on create,modify et supprimer si delete
+       * - json,template : tout recompiler on modify et lancer une erreur on delete
+       * - images : déplacer dans le dossier build correspondant on create, modify, supprimer on delete
+       * - dir : compiler le dossier en cas de création, supprime en cas de delete, et changer le nom du dossier
+       * build en cas de modify
+       */
       try {
          WatchService watcher = FileSystems.getDefault().newWatchService();
          Path dir = currentDirectory.toPath();
@@ -117,6 +127,8 @@ public class Build implements Callable<Integer> {
                   WatchEvent.Kind<?> kind = event.kind();
                   WatchEvent<Path> ev = (WatchEvent<Path>) event;
                   Path filename = ev.context();
+
+                  Path child = dir.resolve(filename);
                   if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
 
                   } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
@@ -124,7 +136,7 @@ public class Build implements Callable<Integer> {
                   } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
 
                   }
-                  System.out.println("Event kind:" + event.kind() + ". File affected: " + event.context() + ".");
+
                }
                key.reset();
                key = watcher.take();
@@ -178,5 +190,38 @@ public class Build implements Callable<Integer> {
       }
    }
 
+   enum FileType {
+      MD, LAYOUT, CONFIG, IMAGE, DIRECTORY, OTHER;
+
+      public static FileType getFileTypeFromFile(File file, File rootDirectory) {
+         if (file.isDirectory()) {
+            return DIRECTORY;
+         }
+         String name = file.getName();
+         String[] splitResult = name.split(".");
+         if (splitResult.length <= 1) {
+            return OTHER;
+         }
+         switch (splitResult[splitResult.length - 1]) {
+            case "md":
+               return MD;
+            case "html":
+               if (name.equals("layout.html") && file.getParentFile().getName().equals("template") &&
+                   file.getParentFile().getParentFile().equals(rootDirectory)) {
+                  return LAYOUT;
+               }
+               break;
+            case "json":
+               if (name.equals("config.json") && file.getParentFile().equals(rootDirectory)) {
+                  return CONFIG;
+               }
+               break;
+            case ".png":
+            case ".jpg":
+               return IMAGE;
+         }
+         return OTHER;
+      }
+   }
 
 }
