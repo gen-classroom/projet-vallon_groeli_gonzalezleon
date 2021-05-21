@@ -65,9 +65,8 @@ public class Util {
             result.append((char) c);
             c = reader.read();
          }
-      }catch (IOException e ) {
+      } finally {
          reader.close();
-         throw e;
       }
       return result.toString();
    }
@@ -84,9 +83,8 @@ public class Util {
       try {
          writer.write(content);
          writer.flush();
-      } catch (IOException e) {
+      }finally {
          writer.close();
-         throw e;
       }
    }
 }
