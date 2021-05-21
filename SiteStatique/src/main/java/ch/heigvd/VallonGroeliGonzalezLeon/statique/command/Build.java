@@ -8,6 +8,7 @@ import picocli.CommandLine;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
 import java.util.concurrent.Callable;
 
 
@@ -22,6 +23,9 @@ import java.util.concurrent.Callable;
                                    "The program will also compile all md files in subdirectories of the current " +
                                    "directory. ")
 public class Build implements Callable<Integer> {
+
+   @CommandLine.Option(names = {"-w", "--watching"},
+                       description = "Enables background continuous analysis of the project") boolean watching;
 
    @Override
    public Integer call() {
@@ -98,15 +102,47 @@ public class Build implements Callable<Integer> {
             }
          }
       }
+      if (!watching) {
+         return 0;
+      }
+      try {
+         WatchService watcher = FileSystems.getDefault().newWatchService();
+         Path dir = currentDirectory.toPath();
+         dir.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY,
+                      StandardWatchEventKinds.ENTRY_DELETE);
+         while (true) {
+            WatchKey key = watcher.take();
+            while (key != null) {
+               for (WatchEvent<?> event : key.pollEvents()) {
+                  WatchEvent.Kind<?> kind = event.kind();
+                  WatchEvent<Path> ev = (WatchEvent<Path>) event;
+                  Path filename = ev.context();
+                  if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
 
+                  } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
+
+                  } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
+
+                  }
+                  System.out.println("Event kind:" + event.kind() + ". File affected: " + event.context() + ".");
+               }
+               key.reset();
+               key = watcher.take();
+            }
+         }
+      } catch (IOException | InterruptedException e) {
+         e.printStackTrace();
+      }
       return 0;
    }
 
    /**
     * Creates html files from md in subdirs, and translates all the images found
+    *
     * @param templateHTML
     * @param currentDir
     * @param currentBuildDir
+    *
     * @throws IOException
     */
    private void recursiveBuild(TemplateHTML templateHTML, File currentDir, File currentBuildDir) throws IOException {
@@ -123,8 +159,7 @@ public class Build implements Callable<Integer> {
                }
                try {
                   String fileName = "/" + f.getName().replace(".md", "") + ".html";
-                  File indexHtmlFile =
-                          new File(currentBuildDir.getPath() + fileName);
+                  File indexHtmlFile = new File(currentBuildDir.getPath() + fileName);
                   Util.writeFile(htmlContent, new BufferedWriter(
                           new OutputStreamWriter(new FileOutputStream(indexHtmlFile), StandardCharsets.UTF_8)));
                } catch (IOException e) {
@@ -133,7 +168,7 @@ public class Build implements Callable<Integer> {
                }
             }
          }
-         Util.copyImages(currentDir,currentBuildDir);
+         Util.copyImages(currentDir, currentBuildDir);
          for (File f : currentDir.listFiles()) {
             if (f.isDirectory() && !f.getName().equals("build")) {
                File futurBuildDir = new File(currentBuildDir.getPath() + "/" + f.getName());
