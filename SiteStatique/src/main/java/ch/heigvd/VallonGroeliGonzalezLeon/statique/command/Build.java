@@ -111,14 +111,14 @@ public class Build implements Callable<Integer> {
                         handleMd(ev, currentDirectory, templateHTML);
                         break;
                      case IMAGE:
-                        handleImage();
+                        handleImage(ev);
                         break;
                      case CONFIG:
                      case LAYOUT:
                         handleConfigAndLayout(ev, templateHTML, mdIndexFile, currentDirectory, buildDirectory);
                         break;
                      case DIRECTORY:
-                        handleDirectory();
+                        handleDirectory(ev, templateHTML,null,null);
                         break;
                   }
                }
@@ -193,7 +193,6 @@ public class Build implements Callable<Integer> {
    }
    private void handleImage(WatchEvent<Path> event){
 
-   private void handleImage() {
 
    }
 
