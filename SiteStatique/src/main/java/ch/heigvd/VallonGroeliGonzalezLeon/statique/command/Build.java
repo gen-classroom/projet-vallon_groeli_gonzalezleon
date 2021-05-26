@@ -74,35 +74,12 @@ public class Build implements Callable<Integer> {
          return 2;
       }
 
-      String indexContent;
       try {
-         indexContent = templateHTML.generatePage(mdIndexFile);
+         buildAll(templateHTML, mdIndexFile, currentDirectory, buildDirectory);
       } catch (IOException e) {
-         System.err.println("Error while reading the mdFile");
          return 2;
       }
 
-
-      try {
-         File indexHtmlFile = new File(buildDirectory.getPath() + "/index.html");
-         Util.writeFile(indexContent, new BufferedWriter(
-                 new OutputStreamWriter(new FileOutputStream(indexHtmlFile), StandardCharsets.UTF_8)));
-         Util.copyImages(currentDirectory, buildDirectory);
-      } catch (IOException e) {
-         System.err.println("Error while writing the html file");
-         return 2;
-      }
-
-      for (File f : currentDirectory.listFiles()) {
-         if (f.isDirectory() && !f.getName().equals("build")) {
-            File futurBuildDir = new File(buildDirectory.getPath() + "/" + f.getName());
-            try {
-               recursiveBuild(templateHTML, f, futurBuildDir);
-            } catch (IOException e) {
-               return 2;
-            }
-         }
-      }
       if (!watching) {
          return 0;
       }
@@ -129,15 +106,19 @@ public class Build implements Callable<Integer> {
                   WatchEvent<Path> ev = (WatchEvent<Path>) event;
                   Path filename = ev.context();
 
-                  switch (FileType.getFileTypeFromFile(filename.toFile(),currentDirectory)){
+                  switch (FileType.getFileTypeFromFile(filename.toFile(), currentDirectory)) {
                      case MD:
+                        handleMd(ev, currentDirectory, templateHTML);
                         break;
                      case IMAGE:
+                        handleImage();
                         break;
                      case CONFIG:
                      case LAYOUT:
+                        handleConfigAndLayout(ev, templateHTML, mdIndexFile, currentDirectory, buildDirectory);
                         break;
                      case DIRECTORY:
+                        handleDirectory();
                         break;
                   }
                }
@@ -152,7 +133,7 @@ public class Build implements Callable<Integer> {
    }
 
 
-   private void handleMd(WatchEvent<Path> event, File baseDirectory, TemplateHTML templateHTML){
+   private void handleMd(WatchEvent<Path> event, File baseDirectory, TemplateHTML templateHTML) {
       // /site/machin/2/4/truc/test.md -> /site/build/machin/2/4/truc/test.md
       WatchEvent.Kind<?> kind = event.kind();
       Path fileModified = event.context();
@@ -162,14 +143,14 @@ public class Build implements Callable<Integer> {
 
       if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
          try {
-            createHTMLPage(templateHTML,fileModified.toFile(), finalPathInMD.getParent().toFile());
+            createHTMLPage(templateHTML, fileModified.toFile(), finalPathInMD.getParent().toFile());
          } catch (IOException e) {
             e.printStackTrace();
          }
       } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
          fileHTML.delete();
          try {
-            createHTMLPage(templateHTML,fileModified.toFile(), finalPathInMD.getParent().toFile());
+            createHTMLPage(templateHTML, fileModified.toFile(), finalPathInMD.getParent().toFile());
          } catch (IOException e) {
             e.printStackTrace();
          }
@@ -180,22 +161,23 @@ public class Build implements Callable<Integer> {
    }
 
 
-
-   private void handleConfigAndLayout(WatchEvent<Path> event){
+   private void handleConfigAndLayout(WatchEvent<Path> event, TemplateHTML templateHTML, File mdIndexFile,
+                                      File currentDirectory, File buildDirectory) throws IOException {
       WatchEvent.Kind<?> kind = event.kind();
-      if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
-
-      } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
-
+      if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
+         buildAll(templateHTML, mdIndexFile, currentDirectory, buildDirectory);
       } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
-
+         //TODO arreter programme?
+         System.err.println("Error : if you delete or rename the config.json or layout.html files, the application " +
+                            "will not work properly");
       }
    }
 
-   private void handleDirectory(){
+   private void handleDirectory() {
 
    }
-   private void handleImage(){
+
+   private void handleImage() {
 
    }
 
@@ -226,7 +208,7 @@ public class Build implements Callable<Integer> {
       }
    }
 
-   private void createHTMLPage(TemplateHTML templateHTML, File mdFile,  File targetDirectory) throws IOException {
+   private void createHTMLPage(TemplateHTML templateHTML, File mdFile, File targetDirectory) throws IOException {
       String htmlContent;
       try {
          htmlContent = templateHTML.generatePage(mdFile);
@@ -242,6 +224,38 @@ public class Build implements Callable<Integer> {
       } catch (IOException e) {
          System.err.println("Error while writing the html file");
          throw e;
+      }
+   }
+
+   private void buildAll(TemplateHTML templateHTML, File mdIndexFile, File currentDirectory, File buildDirectory)
+           throws IOException {
+      String indexContent;
+      try {
+         indexContent = templateHTML.generatePage(mdIndexFile);
+      } catch (IOException e) {
+         System.err.println("Error while reading the mdFile");
+         throw e;
+      }
+
+      try {
+         File indexHtmlFile = new File(buildDirectory.getPath() + "/index.html");
+         Util.writeFile(indexContent, new BufferedWriter(
+                 new OutputStreamWriter(new FileOutputStream(indexHtmlFile), StandardCharsets.UTF_8)));
+         Util.copyImages(currentDirectory, buildDirectory);
+      } catch (IOException e) {
+         System.err.println("Error while writing the html file");
+         throw e;
+      }
+
+      for (File f : currentDirectory.listFiles()) {
+         if (f.isDirectory() && !f.getName().equals("build")) {
+            File futurBuildDir = new File(buildDirectory.getPath() + "/" + f.getName());
+            try {
+               recursiveBuild(templateHTML, f, futurBuildDir);
+            } catch (IOException e) {
+               throw e;
+            }
+         }
       }
    }
 
