@@ -173,9 +173,25 @@ public class Build implements Callable<Integer> {
       }
    }
 
-   private void handleDirectory() {
+   /* - images : déplacer dans le dossier build correspondant on create, modify, supprimer on delete
+       * - dir : compiler le dossier en cas de création, supprime en cas de delete, et changer le nom du dossier
+       * build en cas de modify
+       */
+   private void handleDirectory(WatchEvent<Path> event, TemplateHTML templateHTML, File currentDir, File currentBuildDir){
+      WatchEvent.Kind<?> kind = event.kind();
+      if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
+         try {
+            recursiveBuild(templateHTML, currentDir, currentBuildDir);
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
 
+      } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
+
+      }
    }
+   private void handleImage(WatchEvent<Path> event){
 
    private void handleImage() {
 
