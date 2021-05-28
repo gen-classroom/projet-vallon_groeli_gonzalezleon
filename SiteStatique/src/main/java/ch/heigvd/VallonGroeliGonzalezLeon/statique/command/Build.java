@@ -120,7 +120,7 @@ public class Build implements Callable<Integer> {
                                 handleConfigAndLayout(ev, templateHTML, mdIndexFile, currentDirectory, buildDirectory);
                                 break;
                             case DIRECTORY:
-                                handleDirectory(ev, templateHTML, null, null);
+                                handleDirectory(ev, templateHTML, null);
                                 break;
                         }
                     }
@@ -180,7 +180,7 @@ public class Build implements Callable<Integer> {
      * build en cas de modify
      * En cas de modif : on gere pas car pas moyen de recuperer l'ancien nom du fichier
      */
-    private void handleDirectory(WatchEvent<Path> event, TemplateHTML templateHTML, File currentDir, File currentBuildDir) {
+    private void handleDirectory(WatchEvent<Path> event, TemplateHTML templateHTML, File currentDir) {
         WatchEvent.Kind<?> kind = event.kind();
         if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
             try {
@@ -199,21 +199,6 @@ public class Build implements Callable<Integer> {
     }
 
     private void handleImage(WatchEvent<Path> event) {
-        WatchEvent.Kind<?> kind = event.kind();
-        if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
-            try {
-                recursiveBuild(templateHTML, currentDir, currentBuildDir);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
-
-        } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
-            Path path = event.context();
-            Path pathUtil = Util.generatePathInBuildDirectory(currentDir.toPath(), path);
-            File file = new File(String.valueOf(pathUtil));
-            file.delete();
-        }
 
     }
 
