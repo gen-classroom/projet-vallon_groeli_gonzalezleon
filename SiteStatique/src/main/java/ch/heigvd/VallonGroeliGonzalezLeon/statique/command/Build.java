@@ -185,7 +185,8 @@ public class Build implements Callable<Integer> {
         if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
             try {
                 Path path = event.context();
-                recursiveBuild(templateHTML, path.toFile(), currentBuildDir);
+                Path pathUtil = Util.generatePathInBuildDirectory(currentDir.toPath(), path);
+                recursiveBuild(templateHTML, path.toFile(), pathUtil.toFile());
             } catch (IOException e) {
                 e.printStackTrace();
             }
