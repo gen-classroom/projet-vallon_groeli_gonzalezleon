@@ -236,7 +236,7 @@ public class Build implements Callable<Integer> {
          throw e;
       }
       try {
-         String fileName = "/" + mdFile.getName().replace(".md", "") + ".html";
+         String fileName = "/" + mdFile.getName().substring(0,mdFile.getName().length()-3) + ".html";
          File indexHtmlFile = new File(targetDirectory.getPath() + fileName);
          Util.writeFile(htmlContent, new BufferedWriter(
                  new OutputStreamWriter(new FileOutputStream(indexHtmlFile), StandardCharsets.UTF_8)));
