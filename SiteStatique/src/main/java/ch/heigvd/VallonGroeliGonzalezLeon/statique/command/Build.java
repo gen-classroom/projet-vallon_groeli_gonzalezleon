@@ -6,6 +6,7 @@ import ch.heigvd.VallonGroeliGonzalezLeon.statique.util.Util;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import picocli.CommandLine;
+import ch.heigvd.VallonGroeliGonzalezLeon.statique.util.Util;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -176,6 +177,7 @@ public class Build implements Callable<Integer> {
    /* - images : déplacer dans le dossier build correspondant on create, modify, supprimer on delete
        * - dir : compiler le dossier en cas de création, supprime en cas de delete, et changer le nom du dossier
        * build en cas de modify
+       * En cas de modif : on gere pas car pas moyen de recuperer l'ancien nom du fichier
        */
    private void handleDirectory(WatchEvent<Path> event, TemplateHTML templateHTML, File currentDir, File currentBuildDir){
       WatchEvent.Kind<?> kind = event.kind();
@@ -186,11 +188,17 @@ public class Build implements Callable<Integer> {
             e.printStackTrace();
          }
       } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
+         Path path = Util.generatePathInBuildDirectory(currentDir.toPath(), );
+         Path env = event.context();
 
       } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
-
+         Path path = event.context();
+         Path pathUtil = Util.generatePathInBuildDirectory(currentDir.toPath(), path);
+         File file = new File(String.valueOf(pathUtil));
+         file.delete();
       }
    }
+   
    private void handleImage(WatchEvent<Path> event){
 
 
