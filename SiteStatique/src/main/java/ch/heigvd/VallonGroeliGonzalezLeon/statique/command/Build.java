@@ -187,10 +187,6 @@ public class Build implements Callable<Integer> {
          } catch (IOException e) {
             e.printStackTrace();
          }
-      } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
-         Path path = Util.generatePathInBuildDirectory(currentDir.toPath(), );
-         Path env = event.context();
-
       } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
          Path path = event.context();
          Path pathUtil = Util.generatePathInBuildDirectory(currentDir.toPath(), path);
@@ -198,7 +194,7 @@ public class Build implements Callable<Integer> {
          file.delete();
       }
    }
-   
+
    private void handleImage(WatchEvent<Path> event){
 
 
