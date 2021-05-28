@@ -98,6 +98,6 @@ public class Util {
     */
    public static Path generatePathInBuildDirectory(Path baseDirectory, Path file){
       String endOfPath = file.toString().substring(baseDirectory.toString().length());
-      return Paths.get(baseDirectory.toString() + "/build/" + endOfPath);
+      return Paths.get(baseDirectory + "/build/" + endOfPath);
    }
 }
