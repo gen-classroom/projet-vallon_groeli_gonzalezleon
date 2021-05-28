@@ -192,7 +192,7 @@ public class Build implements Callable<Integer> {
         } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
             Path path = event.context();
             Path pathUtil = Util.generatePathInBuildDirectory(currentDir.toPath(), path);
-            File file = new File(String.valueOf(pathUtil));
+            File file = path.toFile();
             file.delete();
         }
     }
