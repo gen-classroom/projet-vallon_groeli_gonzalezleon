@@ -243,26 +243,7 @@ public class Build implements Callable<Integer> {
         }
     }
 
-<<<<<<< HEAD
-    private void createHTMLPage(TemplateHTML templateHTML, File mdFile, File targetDirectory) throws IOException {
-        String htmlContent;
-        try {
-            htmlContent = templateHTML.generatePage(mdFile);
-        } catch (IOException e) {
-            System.err.println("Error while reading the mdFile");
-            throw e;
-        }
-        try {
-            String fileName = "/" + mdFile.getName().replace(".md", "") + ".html";
-            File indexHtmlFile = new File(targetDirectory.getPath() + fileName);
-            Util.writeFile(htmlContent, new BufferedWriter(
-                    new OutputStreamWriter(new FileOutputStream(indexHtmlFile), StandardCharsets.UTF_8)));
-        } catch (IOException e) {
-            System.err.println("Error while writing the html file");
-            throw e;
-        }
-    }
-=======
+
    private void createHTMLPage(TemplateHTML templateHTML, File mdFile, File targetDirectory) throws IOException {
       String htmlContent;
       try {
@@ -281,7 +262,6 @@ public class Build implements Callable<Integer> {
          throw e;
       }
    }
->>>>>>> fb-background
 
     private void buildAll(TemplateHTML templateHTML, File mdIndexFile, File currentDirectory, File buildDirectory)
             throws IOException {
