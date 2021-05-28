@@ -113,7 +113,7 @@ public class Build implements Callable<Integer> {
                                 handleMd(ev, currentDirectory, templateHTML);
                                 break;
                             case IMAGE:
-                                handleImage(ev);
+                                handleImage(ev, null);
                                 break;
                             case CONFIG:
                             case LAYOUT:
@@ -198,8 +198,29 @@ public class Build implements Callable<Integer> {
         }
     }
 
-    private void handleImage(WatchEvent<Path> event) {
-
+    private void handleImage(WatchEvent<Path> event, File currentDir) {
+        WatchEvent.Kind<?> kind = event.kind();
+        if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
+            File source = event.context().toFile();
+            File dest = Util.generatePathInBuildDirectory(currentDir.toPath(), event.context()).toFile();
+            try {
+                FileUtils.copyFile(source, dest);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
+            File dest = Util.generatePathInBuildDirectory(currentDir.toPath(), event.context()).toFile();
+            dest.delete();
+            File source = event.context().toFile();
+            try {
+                FileUtils.copyFile(source, dest);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
+            File dest = Util.generatePathInBuildDirectory(currentDir.toPath(), event.context()).toFile();
+            dest.delete();
+        }
     }
 
     /**
