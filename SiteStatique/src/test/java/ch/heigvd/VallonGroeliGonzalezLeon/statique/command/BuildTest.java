@@ -20,8 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class BuildTest {
 
@@ -148,6 +147,43 @@ class BuildTest {
       assertEquals(Build.FileType.DIRECTORY, Build.FileType.getFileTypeFromFile(testDirectory, testDirectory));
       File tmp = new File(testDirectory + "/tmp.txt");
       assertEquals(Build.FileType.OTHER, Build.FileType.getFileTypeFromFile(tmp, testDirectory));
+   }
 
+   @Test
+   void watchingWorksCorrectly() throws IOException, InterruptedException {
+      File testDirectory = new File(new File(".").getCanonicalPath());
+      File fileIndex = new File(testDirectory + "/index.md");
+      File fileConfig = new File(testDirectory + "/config.json");
+      File templateDir = new File(testDirectory.getPath() + "/template");
+      File buildDirectory = new File(new File(".").getCanonicalPath() + "/build");
+
+      Thread thread = new Thread(() -> new CommandLine(new Statique()).execute("build","-w"));
+      thread.start();
+      try {
+         Thread.sleep(2000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+
+      //md files
+      File index = new File(buildDirectory.getPath() + "/index.html");
+      assertTrue(index.exists());
+      String content = Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(index))));
+      content = content.replace("\n", "").replace("\r", "");
+      String expectedContent =
+              "<html lang=\"FR\">\n<head>\n<meta charset=\"UTF-8\">\n<title> My statique website | Mon premier " +
+              "article </title>\n</head>\n<body>\n{%include menu.html}\n<h1>Mon premier article</h1>\n<h2>Mon " +
+              "sous-titre</h2>\n<p>Le contenu de mon article.</p>\n\n</body>\n</html>";
+      expectedContent = expectedContent.replace("\n", "").replace("\r", "");
+      assertEquals(expectedContent, content);
+      fileIndex.delete();
+      try {
+         Thread.sleep(1000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+      assertFalse(index.exists());
+
+      thread.interrupt();
    }
 }

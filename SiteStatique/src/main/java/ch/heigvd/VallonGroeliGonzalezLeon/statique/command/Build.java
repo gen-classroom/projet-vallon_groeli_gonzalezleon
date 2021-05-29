@@ -120,6 +120,8 @@ public class Build implements Callable<Integer> {
                      case DIRECTORY:
                         handleDirectory(ev, templateHTML, baseDirectory);
                         break;
+                     case OTHER:
+                        break;
                   }
                }
                key.reset();
