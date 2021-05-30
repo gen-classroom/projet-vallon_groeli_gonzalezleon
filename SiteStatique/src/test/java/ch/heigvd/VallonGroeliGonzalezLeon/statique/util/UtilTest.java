@@ -94,5 +94,8 @@ class UtilTest {
       Path pathFromFile = Paths.get("/C/TEST/BASE/DIRECTORY/FILE/TO/COPY");
       assertEquals(Paths.get("/C/TEST/BASE/DIRECTORY/build/FILE/TO/COPY"),
               Util.generatePathInBuildDirectory(pathFrom, pathFromFile));
+      File testFile = new File(currentDirectory.getPath()+"/test/FILE/truc.txt");
+      assertEquals(Paths.get(buildDirectory.toPath() + "/test/FILE/truc.txt"),
+                   Util.generatePathInBuildDirectory(currentDirectory.toPath(),testFile.toPath()));
    }
 }
