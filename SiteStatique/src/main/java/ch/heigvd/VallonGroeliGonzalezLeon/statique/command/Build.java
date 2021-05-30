@@ -129,7 +129,6 @@ public class Build implements Callable<Integer> {
             }
          }
       } catch (IOException | InterruptedException e) {
-         e.printStackTrace();
       }
       return 0;
    }
@@ -150,13 +149,14 @@ public class Build implements Callable<Integer> {
             e.printStackTrace();
          }
       } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
-         fileHTML.delete();
-         try {
-            createHTMLPage(templateHTML, fileModified.toAbsolutePath().toFile(), finalPathInMD.getParent().toFile());
-         } catch (IOException e) {
-            e.printStackTrace();
+         if (fileModified.toAbsolutePath().toFile().exists()) {
+            fileHTML.delete();
+            try {
+               createHTMLPage(templateHTML, fileModified.toAbsolutePath().toFile(), finalPathInMD.getParent().toFile());
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
          }
-
       } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
          fileHTML.delete();
       }
@@ -167,7 +167,9 @@ public class Build implements Callable<Integer> {
                                       File baseDirectory, File buildDirectory) throws IOException {
       WatchEvent.Kind<?> kind = event.kind();
       if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
-         buildAll(templateHTML, mdIndexFile, baseDirectory, buildDirectory);
+         if (event.context().toAbsolutePath().toFile().exists()) {
+            buildAll(templateHTML, mdIndexFile, baseDirectory, buildDirectory);
+         }
       } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
          //TODO arreter programme?
          System.err.println("Error : if you delete or rename the config.json or layout.html files, the application " +
@@ -185,14 +187,14 @@ public class Build implements Callable<Integer> {
       if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
          try {
             Path path = event.context();
-            Path pathUtil = Util.generatePathInBuildDirectory(baseDirectory.toPath(), path);
+            Path pathUtil = Util.generatePathInBuildDirectory(baseDirectory.toPath(), path.toAbsolutePath());
             recursiveBuild(templateHTML, path.toFile(), pathUtil.toFile());
          } catch (IOException e) {
             e.printStackTrace();
          }
       } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
          Path path = event.context();
-         Path pathUtil = Util.generatePathInBuildDirectory(baseDirectory.toPath(), path);
+         Path pathUtil = Util.generatePathInBuildDirectory(baseDirectory.toPath(), path.toAbsolutePath());
          File file = pathUtil.toFile();
          file.delete();
       }
@@ -202,23 +204,25 @@ public class Build implements Callable<Integer> {
       WatchEvent.Kind<?> kind = event.kind();
       if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
          File source = event.context().toFile();
-         File dest = Util.generatePathInBuildDirectory(baseDirectory.toPath(), event.context()).toFile();
+         File dest = Util.generatePathInBuildDirectory(baseDirectory.toPath(), event.context().toAbsolutePath()).toFile();
          try {
             FileUtils.copyFile(source, dest);
          } catch (IOException e) {
             e.printStackTrace();
          }
       } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
-         File dest = Util.generatePathInBuildDirectory(baseDirectory.toPath(), event.context()).toFile();
-         dest.delete();
-         File source = event.context().toFile();
-         try {
-            FileUtils.copyFile(source, dest);
-         } catch (IOException e) {
-            e.printStackTrace();
+         if (event.context().toAbsolutePath().toFile().exists()) {
+            File dest = Util.generatePathInBuildDirectory(baseDirectory.toPath(), event.context().toAbsolutePath()).toFile();
+            dest.delete();
+            File source = event.context().toFile();
+            try {
+               FileUtils.copyFile(source, dest);
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
          }
       } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
-         File dest = Util.generatePathInBuildDirectory(baseDirectory.toPath(), event.context()).toFile();
+         File dest = Util.generatePathInBuildDirectory(baseDirectory.toPath(), event.context().toAbsolutePath()).toFile();
          dest.delete();
       }
    }

@@ -150,7 +150,7 @@ class BuildTest {
    }
 
    @Test
-   void watchingWorksCorrectly() throws IOException, InterruptedException {
+   void watchingWorksCorrectly() throws IOException {
       File testDirectory = new File(new File(".").getCanonicalPath());
       File fileIndex = new File(testDirectory + "/index.md");
       File fileConfig = new File(testDirectory + "/config.json");
@@ -183,6 +183,14 @@ class BuildTest {
          e.printStackTrace();
       }
       assertFalse(index.exists());
+
+      fileIndex.createNewFile();
+      MdAPI.initMdIndexFile(fileIndex);
+
+      assertTrue(index.exists());
+      content = Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(index))));
+      content = content.replace("\n", "").replace("\r", "");
+      assertEquals(expectedContent, content);
 
       thread.interrupt();
    }
