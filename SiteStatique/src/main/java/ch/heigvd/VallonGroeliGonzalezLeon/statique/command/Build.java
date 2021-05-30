@@ -96,8 +96,8 @@ public class Build implements Callable<Integer> {
       try {
          WatchService watcher = FileSystems.getDefault().newWatchService();
          Path dir = baseDirectory.toPath();
-         dir.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY,
-                      StandardWatchEventKinds.ENTRY_DELETE);
+         dir.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE,
+                      StandardWatchEventKinds.ENTRY_MODIFY);
          while (true) {
             WatchKey key = watcher.take();
             while (key != null) {
@@ -139,20 +139,20 @@ public class Build implements Callable<Integer> {
       // /site/machin/2/4/truc/test.md -> /site/build/machin/2/4/truc/test.md
       WatchEvent.Kind<?> kind = event.kind();
       Path fileModified = event.context();
-      Path finalPathInMD = Util.generatePathInBuildDirectory(Paths.get(baseDirectory.getPath()), fileModified);
+      Path finalPathInMD = Util.generatePathInBuildDirectory(baseDirectory.toPath(), fileModified.toAbsolutePath());
       File fileHTML = new File(finalPathInMD.toString().replace(".md", ".html"));
       //File toEdit = buildDirectory.getPath() + " / " + fileModified.
 
       if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
          try {
-            createHTMLPage(templateHTML, fileModified.toFile(), finalPathInMD.getParent().toFile());
+            createHTMLPage(templateHTML, fileModified.toAbsolutePath().toFile(), finalPathInMD.getParent().toFile());
          } catch (IOException e) {
             e.printStackTrace();
          }
       } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
          fileHTML.delete();
          try {
-            createHTMLPage(templateHTML, fileModified.toFile(), finalPathInMD.getParent().toFile());
+            createHTMLPage(templateHTML, fileModified.toAbsolutePath().toFile(), finalPathInMD.getParent().toFile());
          } catch (IOException e) {
             e.printStackTrace();
          }
