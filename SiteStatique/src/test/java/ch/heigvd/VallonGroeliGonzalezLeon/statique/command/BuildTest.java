@@ -10,6 +10,7 @@ import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api.MdAPI;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api.TemplateHTML;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.util.Util;
 import org.apache.commons.io.FileUtils;
+import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -150,14 +151,12 @@ class BuildTest {
    }
 
    @Test
-   void watchingWorksCorrectly() throws IOException {
+   void watchingWorksCorrectlyMD() throws IOException {
       File testDirectory = new File(new File(".").getCanonicalPath());
       File fileIndex = new File(testDirectory + "/index.md");
-      File fileConfig = new File(testDirectory + "/config.json");
-      File templateDir = new File(testDirectory.getPath() + "/template");
       File buildDirectory = new File(new File(".").getCanonicalPath() + "/build");
 
-      Thread thread = new Thread(() -> new CommandLine(new Statique()).execute("build","-w"));
+      Thread thread = new Thread(() -> new CommandLine(new Statique()).execute("build", "-w"));
       thread.start();
       try {
          Thread.sleep(2000);
@@ -187,11 +186,57 @@ class BuildTest {
       fileIndex.createNewFile();
       MdAPI.initMdIndexFile(fileIndex);
 
+      try {
+         Thread.sleep(1000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+
       assertTrue(index.exists());
       content = Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(index))));
       content = content.replace("\n", "").replace("\r", "");
       assertEquals(expectedContent, content);
 
       thread.interrupt();
+   }
+
+   @Test
+   void watchingWorksCorrectlyConfigLayout() throws IOException {
+      File testDirectory = new File(new File(".").getCanonicalPath());
+      File fileIndex = new File(testDirectory + "/index.md");
+      File fileConfig = new File(testDirectory + "/config.json");
+      File templateDir = new File(testDirectory.getPath() + "/template");
+      File buildDirectory = new File(new File(".").getCanonicalPath() + "/build");
+
+      Thread thread = new Thread(() -> new CommandLine(new Statique()).execute("build", "-w"));
+      thread.start();
+      try {
+         Thread.sleep(2000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+
+      String chaine = Util.readFile(
+              new BufferedReader(new InputStreamReader(new FileInputStream(fileConfig), StandardCharsets.UTF_8)));
+      JSONObject obj = new JSONObject(chaine);
+      obj.put("siteTitle", "My modified statique website");
+      Util.writeFile(obj.toString(), new FileWriter(fileConfig));
+
+      try {
+         Thread.sleep(1000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+
+      File index = new File(buildDirectory.getPath() + "/index.html");
+      assertTrue(index.exists());
+      String content = Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(index))));
+      content = content.replace("\n", "").replace("\r", "");
+      String expectedContent =
+              "<html lang=\"FR\">\n<head>\n<meta charset=\"UTF-8\">\n<title> My modified statique website | Mon " +
+              "premier article </title>\n</head>\n<body>\n{%include menu.html}\n<h1>Mon premier article</h1>\n<h2>Mon" +
+              " sous-titre</h2>\n<p>Le contenu de mon article.</p>\n\n</body>\n</html>";
+      expectedContent = expectedContent.replace("\n", "").replace("\r", "");
+      assertEquals(expectedContent, content);
    }
 }

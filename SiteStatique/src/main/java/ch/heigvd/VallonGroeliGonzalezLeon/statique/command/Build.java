@@ -115,7 +115,9 @@ public class Build implements Callable<Integer> {
                         break;
                      case CONFIG:
                      case LAYOUT:
-                        handleConfigAndLayout(ev, templateHTML, mdIndexFile, baseDirectory, buildDirectory);
+                        templateHTML =
+                                handleConfigAndLayout(ev, templateHTML, mdIndexFile, baseDirectory, buildDirectory,
+                                                      layoutFile, jsonFile);
                         break;
                      case DIRECTORY:
                         handleDirectory(ev, templateHTML, baseDirectory);
@@ -143,10 +145,12 @@ public class Build implements Callable<Integer> {
       //File toEdit = buildDirectory.getPath() + " / " + fileModified.
 
       if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
-         try {
-            createHTMLPage(templateHTML, fileModified.toAbsolutePath().toFile(), finalPathInMD.getParent().toFile());
-         } catch (IOException e) {
-            e.printStackTrace();
+         if (event.context().toFile().length() > 0) {
+            try {
+               createHTMLPage(templateHTML, fileModified.toAbsolutePath().toFile(), finalPathInMD.getParent().toFile());
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
          }
       } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
          if (fileModified.toAbsolutePath().toFile().exists()) {
@@ -163,18 +167,31 @@ public class Build implements Callable<Integer> {
    }
 
 
-   private void handleConfigAndLayout(WatchEvent<Path> event, TemplateHTML templateHTML, File mdIndexFile,
-                                      File baseDirectory, File buildDirectory) throws IOException {
+   private TemplateHTML handleConfigAndLayout(WatchEvent<Path> event, TemplateHTML templateHTML, File mdIndexFile,
+                                              File baseDirectory, File buildDirectory, File layoutFile, File jsonFile)
+           throws IOException {
       WatchEvent.Kind<?> kind = event.kind();
       if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
          if (event.context().toAbsolutePath().toFile().exists()) {
+            templateHTML = new TemplateHTML(layoutFile, jsonFile);
+            if (buildDirectory.exists()) {
+               try {
+                  FileUtils.deleteDirectory(buildDirectory);
+               } catch (IOException e) {
+                  e.printStackTrace();
+                  System.err.println("Build directory deletion failure.");
+               }
+            }
+            buildDirectory.mkdir();
             buildAll(templateHTML, mdIndexFile, baseDirectory, buildDirectory);
+            return templateHTML;
          }
       } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
          //TODO arreter programme?
          System.err.println("Error : if you delete or rename the config.json or layout.html files, the application " +
                             "will not work properly");
       }
+      return templateHTML;
    }
 
    /* - images : déplacer dans le dossier build correspondant on create, modify, supprimer on delete
@@ -204,7 +221,8 @@ public class Build implements Callable<Integer> {
       WatchEvent.Kind<?> kind = event.kind();
       if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
          File source = event.context().toFile();
-         File dest = Util.generatePathInBuildDirectory(baseDirectory.toPath(), event.context().toAbsolutePath()).toFile();
+         File dest =
+                 Util.generatePathInBuildDirectory(baseDirectory.toPath(), event.context().toAbsolutePath()).toFile();
          try {
             FileUtils.copyFile(source, dest);
          } catch (IOException e) {
@@ -212,7 +230,8 @@ public class Build implements Callable<Integer> {
          }
       } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
          if (event.context().toAbsolutePath().toFile().exists()) {
-            File dest = Util.generatePathInBuildDirectory(baseDirectory.toPath(), event.context().toAbsolutePath()).toFile();
+            File dest = Util.generatePathInBuildDirectory(baseDirectory.toPath(), event.context().toAbsolutePath())
+                            .toFile();
             dest.delete();
             File source = event.context().toFile();
             try {
@@ -222,7 +241,8 @@ public class Build implements Callable<Integer> {
             }
          }
       } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
-         File dest = Util.generatePathInBuildDirectory(baseDirectory.toPath(), event.context().toAbsolutePath()).toFile();
+         File dest =
+                 Util.generatePathInBuildDirectory(baseDirectory.toPath(), event.context().toAbsolutePath()).toFile();
          dest.delete();
       }
    }
@@ -236,7 +256,8 @@ public class Build implements Callable<Integer> {
     *
     * @throws IOException
     */
-   private void recursiveBuild(TemplateHTML templateHTML, File currentDirectory, File currentBuildDir) throws IOException {
+   private void recursiveBuild(TemplateHTML templateHTML, File currentDirectory, File currentBuildDir)
+           throws IOException {
       if (currentDirectory.listFiles() != null) {
          for (File f : currentDirectory.listFiles()) {
             if (f.getName().toLowerCase().endsWith(".md")) {
@@ -324,7 +345,8 @@ public class Build implements Callable<Integer> {
                }
                break;
             case "json":
-               if (name.equals("config.json") && file.getParentFile().equals(rootDirectory)) {
+               File parent = file.toPath().toAbsolutePath().toFile().getParentFile();
+               if (name.equals("config.json") && parent.equals(rootDirectory)) {
                   return CONFIG;
                }
                break;
