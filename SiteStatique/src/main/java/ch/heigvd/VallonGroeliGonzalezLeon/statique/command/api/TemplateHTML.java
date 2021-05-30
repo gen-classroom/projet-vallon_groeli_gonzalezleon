@@ -13,19 +13,33 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The type Template html.
+ */
 public class TemplateHTML {
-    private File layoutFile;
-    private File configFile;
-    private Template template;
-    private JsonAPI.JsonContent jsonContent;
+    private final File layoutFile;
+    private final JsonAPI.JsonContent jsonContent;
 
 
+    /**
+     * Instantiates a new Template html and fill jsonContent file with the configuration file
+     *
+     * @param layoutFile the layout file
+     * @param configFile the config file
+     * @throws IOException the io exception
+     */
     public TemplateHTML(File layoutFile, File configFile) throws IOException {
         this.layoutFile = layoutFile;
-        this.configFile = configFile;
         jsonContent = JsonAPI.analyseFile(configFile);
     }
 
+    /**
+     * Initiates the layout file with a basic structure
+     *
+     * @param emptyFile an empty file which will be the layout file
+     * @throws IllegalArgumentException the illegal argument exception
+     * @throws IOException              the io exception
+     */
     public static void initLayoutFile(File emptyFile) throws IllegalArgumentException, IOException {
         if (emptyFile.length() > 0) {
             throw new IllegalArgumentException();
@@ -38,23 +52,30 @@ public class TemplateHTML {
         Util.writeFile(defaultContent, new FileWriter(emptyFile));
     }
 
+    /**
+     * Generate the html content page in a string with the field completed with the data in the index and
+     * the configuration file
+     *
+     * @param mdFile the md file
+     * @return a string which contains the content of the html page
+     * @throws IOException the io exception
+     */
     public String generatePage(File mdFile) throws IOException {
         MdAPI.MdContent mdContent = MdAPI.analyseFile(mdFile);
         TemplateLoader loader = new FileTemplateLoader(layoutFile.getParentFile(), ".html");
         //TemplateLoader loader = new ClassPathTemplateLoaderCustom(layoutFile.getParentFile().getPath(), ".html");
         Handlebars handlebars = new Handlebars(loader);
-        template = handlebars.compile("layout");
+        Template template = handlebars.compile("layout");
         Map<String, String> parameterMap = new HashMap<>();
         parameterMap.put("language", jsonContent.getLanguage());
         parameterMap.put("charset", jsonContent.getCharset());
         parameterMap.put("siteTitle", jsonContent.getSiteTitle());
         parameterMap.put("pageTitle", mdContent.getPageTitle());
         parameterMap.put("content", mdContent.getContent());
-        String templateString = template.apply(parameterMap);
-        return templateString;
+        return template.apply(parameterMap);
     }
 
-/*  Redefinition pour windows : pb de separateur dans les paths
+/*  Redefinition pour windows : pb de séparateur dans les paths
     class ClassPathTemplateLoaderCustom extends ClassPathTemplateLoader {
 
         private String prefix = "";

@@ -14,13 +14,20 @@ import java.io.IOException;
 import java.util.concurrent.Callable;
 
 
+/**
+ * The type Init.
+ */
 @CommandLine.Command(name = "init", mixinStandardHelpOptions = true,
         description = "Initializes the site and creates a file and a subfile which contains a configuration file (json) and an index file (markdown). This command needs to be" +
                 " executed where the user wants to create the repository of the site. The first argument is the name of the command and the second the names of the two directories " +
-                "(/fileA/fileB). If one or the two files already exist, it's replace by the new one.")
+                "(/fileA/fileB). If one or the two files already exist, it's replace by the new one. The option -m (--markdown) can be used to generate only a new index file in the current " +
+                "repertory.")
 
 
 public class Init implements Callable<Integer> {
+    /**
+     * The Site path.
+     */
     @CommandLine.Parameters(index = "0")
     String sitePath;
 
