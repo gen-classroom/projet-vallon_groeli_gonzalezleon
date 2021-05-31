@@ -1,8 +1,9 @@
-package ch.heigvd.VallonGroeliGonzalezLeon.statique.command;/*
+/*
  * @File BuildTest.java
  * @Authors : David González León
  * @Date 19 mars 2021
  */
+package ch.heigvd.VallonGroeliGonzalezLeon.statique.command;
 
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.Statique;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api.JsonAPI;
@@ -203,9 +204,7 @@ class BuildTest {
    @Test
    void watchingWorksCorrectlyConfigLayout() throws IOException {
       File testDirectory = new File(new File(".").getCanonicalPath());
-      File fileIndex = new File(testDirectory + "/index.md");
       File fileConfig = new File(testDirectory + "/config.json");
-      File templateDir = new File(testDirectory.getPath() + "/template");
       File buildDirectory = new File(new File(".").getCanonicalPath() + "/build");
 
       Thread thread = new Thread(() -> new CommandLine(new Statique()).execute("build", "-w"));
@@ -238,5 +237,57 @@ class BuildTest {
               " sous-titre</h2>\n<p>Le contenu de mon article.</p>\n\n</body>\n</html>";
       expectedContent = expectedContent.replace("\n", "").replace("\r", "");
       assertEquals(expectedContent, content);
+
+      thread.interrupt();
+   }
+
+   @Test
+   void watchingWorksCorrectlyImage() throws IOException {
+      File testDirectory = new File(new File(".").getCanonicalPath());
+      File buildDirectory = new File(new File(".").getCanonicalPath() + "/build");
+
+      Thread thread = new Thread(() -> new CommandLine(new Statique()).execute("build", "-w"));
+      thread.start();
+      try {
+         Thread.sleep(2000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+
+      File testImage1 = new File(testDirectory.getPath()+"/truc.png");
+      File testImage2 = new File(testDirectory.getPath()+"/machin.jpg");
+
+      testImage1.createNewFile();
+      testImage2.createNewFile();
+
+      try {
+         Thread.sleep(1000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+
+      File outputImage1 = new File(buildDirectory.getPath()+"/truc.png");
+      File outputImage2 = new File(buildDirectory.getPath()+"/machin.jpg");
+      assertTrue(outputImage1.exists());
+      assertTrue(outputImage2.exists());
+
+      testImage1.delete();
+      testImage2.delete();
+
+      try {
+         Thread.sleep(1000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+
+      assertFalse(outputImage1.exists());
+      assertFalse(outputImage2.exists());
+
+      thread.interrupt();
+   }
+
+   @Test
+   void watchingWorksCorrectlyDirectory() {
+
    }
 }
