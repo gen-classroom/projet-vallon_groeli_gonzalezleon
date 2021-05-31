@@ -201,16 +201,15 @@ public class Build implements Callable<Integer> {
     */
    private void handleDirectory(WatchEvent<Path> event, TemplateHTML templateHTML, File baseDirectory) {
       WatchEvent.Kind<?> kind = event.kind();
+      Path path = event.context();
       if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
          try {
-            Path path = event.context();
             Path pathUtil = Util.generatePathInBuildDirectory(baseDirectory.toPath(), path.toAbsolutePath());
-            recursiveBuild(templateHTML, path.toFile(), pathUtil.toFile());
+            recursiveBuild(templateHTML, path.toAbsolutePath().toFile(), pathUtil.toAbsolutePath().toFile());
          } catch (IOException e) {
             e.printStackTrace();
          }
       } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
-         Path path = event.context();
          Path pathUtil = Util.generatePathInBuildDirectory(baseDirectory.toPath(), path.toAbsolutePath());
          File file = pathUtil.toFile();
          file.delete();

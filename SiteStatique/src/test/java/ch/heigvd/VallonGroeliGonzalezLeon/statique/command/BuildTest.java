@@ -11,6 +11,7 @@ import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api.MdAPI;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api.TemplateHTML;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.util.Util;
 import org.apache.commons.io.FileUtils;
+import org.commonmark.node.ThematicBreak;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -287,7 +288,36 @@ class BuildTest {
    }
 
    @Test
-   void watchingWorksCorrectlyDirectory() {
+   void watchingWorksCorrectlyDirectory() throws IOException {
+      File testDirectory = new File(new File(".").getCanonicalPath());
+      File fileIndex = new File(testDirectory + "/index.md");
+      File fileConfig = new File(testDirectory + "/config.json");
+      File templateDir = new File(testDirectory.getPath() + "/template");
+      File buildDirectory = new File(new File(".").getCanonicalPath() + "/build");
 
+      Thread thread = new Thread(() -> new CommandLine(new Statique()).execute("build", "-w"));
+      thread.start();
+      try {
+         Thread.sleep(2000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+
+      File tmpDirectory = new File(testDirectory.getPath()+"/truc");
+      tmpDirectory.mkdir();
+      File tmpIndexFile = new File(tmpDirectory.getPath()+"/tmp.md");
+      MdAPI.initMdIndexFile(tmpIndexFile);
+
+      try{
+         Thread.sleep(1000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+
+      File outputDir = new File(buildDirectory.getPath()+"/truc");
+      assertTrue(outputDir.exists());
+
+      thread.interrupt();
+      FileUtils.deleteDirectory(tmpDirectory);
    }
 }
