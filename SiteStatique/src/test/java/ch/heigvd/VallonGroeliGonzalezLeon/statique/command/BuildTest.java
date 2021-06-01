@@ -11,7 +11,6 @@ import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api.MdAPI;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api.TemplateHTML;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.util.Util;
 import org.apache.commons.io.FileUtils;
-import org.commonmark.node.ThematicBreak;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -189,7 +188,7 @@ class BuildTest {
       MdAPI.initMdIndexFile(fileIndex);
 
       try {
-         Thread.sleep(1000);
+         Thread.sleep(2000);
       } catch (InterruptedException e) {
          e.printStackTrace();
       }
@@ -223,7 +222,7 @@ class BuildTest {
       Util.writeFile(obj.toString(), new FileWriter(fileConfig));
 
       try {
-         Thread.sleep(1000);
+         Thread.sleep(2000);
       } catch (InterruptedException e) {
          e.printStackTrace();
       }
@@ -255,20 +254,20 @@ class BuildTest {
          e.printStackTrace();
       }
 
-      File testImage1 = new File(testDirectory.getPath()+"/truc.png");
-      File testImage2 = new File(testDirectory.getPath()+"/machin.jpg");
+      File testImage1 = new File(testDirectory.getPath() + "/truc.png");
+      File testImage2 = new File(testDirectory.getPath() + "/machin.jpg");
 
       testImage1.createNewFile();
       testImage2.createNewFile();
 
       try {
-         Thread.sleep(1000);
+         Thread.sleep(2000);
       } catch (InterruptedException e) {
          e.printStackTrace();
       }
 
-      File outputImage1 = new File(buildDirectory.getPath()+"/truc.png");
-      File outputImage2 = new File(buildDirectory.getPath()+"/machin.jpg");
+      File outputImage1 = new File(buildDirectory.getPath() + "/truc.png");
+      File outputImage2 = new File(buildDirectory.getPath() + "/machin.jpg");
       assertTrue(outputImage1.exists());
       assertTrue(outputImage2.exists());
 
@@ -276,7 +275,7 @@ class BuildTest {
       testImage2.delete();
 
       try {
-         Thread.sleep(1000);
+         Thread.sleep(2000);
       } catch (InterruptedException e) {
          e.printStackTrace();
       }
@@ -303,18 +302,18 @@ class BuildTest {
          e.printStackTrace();
       }
 
-      File tmpDirectory = new File(testDirectory.getPath()+"/truc");
+      File tmpDirectory = new File(testDirectory.getPath() + "/truc");
       tmpDirectory.mkdir();
-      File tmpIndexFile = new File(tmpDirectory.getPath()+"/tmp.md");
+      File tmpIndexFile = new File(tmpDirectory.getPath() + "/tmp.md");
       MdAPI.initMdIndexFile(tmpIndexFile);
 
-      try{
-         Thread.sleep(1000);
+      try {
+         Thread.sleep(2000);
       } catch (InterruptedException e) {
          e.printStackTrace();
       }
 
-      File outputDir = new File(buildDirectory.getPath()+"/truc");
+      File outputDir = new File(buildDirectory.getPath() + "/truc");
       assertTrue(outputDir.exists());
 
       thread.interrupt();
