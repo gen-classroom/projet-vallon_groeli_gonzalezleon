@@ -23,7 +23,7 @@ import java.util.concurrent.Callable;
                                    "directory. ")
 public class Build implements Callable<Integer> {
 
-   @CommandLine.Parameters(index = "0") String sitePath;
+   @CommandLine.Option(names = {"-p", "--path"}, description = "Specific path to main directory") String sitePath;
 
    @Override
    public Integer call() {

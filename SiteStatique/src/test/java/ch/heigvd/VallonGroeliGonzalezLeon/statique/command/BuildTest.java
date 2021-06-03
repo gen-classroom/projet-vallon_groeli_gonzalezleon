@@ -96,7 +96,7 @@ class BuildTest {
       File testDirectory = new File(new File(".").getCanonicalPath()+"/workspace");
       assertTrue(testDirectory.exists());
       File buildDirectory = new File(testDirectory.getPath() + "\\build");
-      new CommandLine(new Statique()).execute("build", "/workspace");
+      new CommandLine(new Statique()).execute("build", "-p=/workspace");
       assertTrue(buildDirectory.exists());
       File index = new File(buildDirectory.getPath() + "/index.html");
       assertTrue(index.exists());
