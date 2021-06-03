@@ -23,11 +23,18 @@ import java.util.concurrent.Callable;
                                    "directory. ")
 public class Build implements Callable<Integer> {
 
+   @CommandLine.Parameters(index = "0") String sitePath;
+
    @Override
    public Integer call() {
+
       File currentDirectory;
       try {
-         currentDirectory = new File(new File(".").getCanonicalPath());
+         String path = new File(".").getCanonicalPath();
+         if (sitePath!=null){
+            path+= sitePath;
+         }
+         currentDirectory = new File(path);
       } catch (IOException e) {
          System.err.println("Error while reading current directory");
          e.printStackTrace();
@@ -104,9 +111,11 @@ public class Build implements Callable<Integer> {
 
    /**
     * Creates html files from md in subdirs, and translates all the images found
+    *
     * @param templateHTML
     * @param currentDir
     * @param currentBuildDir
+    *
     * @throws IOException
     */
    private void recursiveBuild(TemplateHTML templateHTML, File currentDir, File currentBuildDir) throws IOException {
@@ -123,8 +132,7 @@ public class Build implements Callable<Integer> {
                }
                try {
                   String fileName = "/" + f.getName().replace(".md", "") + ".html";
-                  File indexHtmlFile =
-                          new File(currentBuildDir.getPath() + fileName);
+                  File indexHtmlFile = new File(currentBuildDir.getPath() + fileName);
                   Util.writeFile(htmlContent, new BufferedWriter(
                           new OutputStreamWriter(new FileOutputStream(indexHtmlFile), StandardCharsets.UTF_8)));
                } catch (IOException e) {
@@ -133,7 +141,7 @@ public class Build implements Callable<Integer> {
                }
             }
          }
-         Util.copyImages(currentDir,currentBuildDir);
+         Util.copyImages(currentDir, currentBuildDir);
          for (File f : currentDir.listFiles()) {
             if (f.isDirectory() && !f.getName().equals("build")) {
                File futurBuildDir = new File(currentBuildDir.getPath() + "/" + f.getName());
