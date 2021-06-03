@@ -71,6 +71,8 @@ class BuildTest {
       assertTrue(buildDirectory.exists());
    }
 
+
+
    @Test
    void testBuildCreatesFileWithGoodContent() throws IOException {
       File buildDirectory = new File(new File(".").getCanonicalPath() + "\\build");
@@ -86,6 +88,27 @@ class BuildTest {
               "sous-titre</h2>\n<p>Le contenu de mon article.</p>\n\n</body>\n</html>";
       expectedContent = expectedContent.replace("\n", "").replace("\r", "");
       assertEquals(expectedContent, content);
+   }
+
+   @Test
+   void testBuildWorksWithOption() throws IOException {
+      new CommandLine(new Statique()).execute("init", "/workspace");
+      File testDirectory = new File(new File(".").getCanonicalPath()+"/workspace");
+      assertTrue(testDirectory.exists());
+      File buildDirectory = new File(testDirectory.getPath() + "\\build");
+      new CommandLine(new Statique()).execute("build", "-p=/workspace");
+      assertTrue(buildDirectory.exists());
+      File index = new File(buildDirectory.getPath() + "/index.html");
+      assertTrue(index.exists());
+      String content = Util.readFile(new BufferedReader(new InputStreamReader(new FileInputStream(index))));
+      content = content.replace("\n", "").replace("\r", "");
+      String expectedContent =
+              "<html lang=\"FR\">\n<head>\n<meta charset=\"UTF-8\">\n<title> My statique website | Mon premier " +
+              "article </title>\n</head>\n<body>\n{%include menu.html}\n<h1>Mon premier article</h1>\n<h2>Mon " +
+              "sous-titre</h2>\n<p>Le contenu de mon article.</p>\n\n</body>\n</html>";
+      expectedContent = expectedContent.replace("\n", "").replace("\r", "");
+      assertEquals(expectedContent, content);
+      FileUtils.deleteDirectory(testDirectory);
    }
 
    @Test

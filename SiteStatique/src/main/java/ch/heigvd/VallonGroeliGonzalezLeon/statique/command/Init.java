@@ -24,29 +24,39 @@ public class Init implements Callable<Integer> {
     @CommandLine.Parameters(index = "0")
     String sitePath;
 
+    @CommandLine.Option(names = {"-m", "--markdown"},
+            description = "Generate only a new index file (markdown) in current repertory")
+    boolean mdFile;
+
     @Override
-    public Integer call()  {
+    public Integer call() {
         try {
-            if (sitePath != null) {
-                File targetDirectory = new File(new File(".").getCanonicalPath() + sitePath);
-                if (targetDirectory.exists()) {
-                    FileUtils.deleteDirectory(targetDirectory);
-                }
-                if (targetDirectory.mkdirs()) {
-                    File config = new File(targetDirectory.getPath() + "/config.json");
-                    File index = new File(targetDirectory.getPath() + "/index.md");
-                    config.createNewFile();
-                    JsonAPI.initJSONConfigFile(config);
-                    System.out.println("File created : " + config.getName());
-                    index.createNewFile();
-                    MdAPI.initMdIndexFile(index);
-                    System.out.println("File created : " + index.getName());
-                    File templateDir = new File(targetDirectory.getPath() + "/template");
-                    if (templateDir.mkdirs()) {
-                        File layout = new File(templateDir.getPath() + "/layout.html");
-                        layout.createNewFile();
-                        TemplateHTML.initLayoutFile(layout);
-                        System.out.println("File created : " + layout.getName());
+            if (mdFile) {
+                File index = new File(new File(".").getCanonicalPath() + "/index.md");
+                index.createNewFile();
+                MdAPI.initMdIndexFile(index);
+            } else {
+                if (sitePath != null) {
+                    File targetDirectory = new File(new File(".").getCanonicalPath() + sitePath);
+                    if (targetDirectory.exists()) {
+                        FileUtils.deleteDirectory(targetDirectory);
+                    }
+                    if (targetDirectory.mkdirs()) {
+                        File config = new File(targetDirectory.getPath() + "/config.json");
+                        File index = new File(targetDirectory.getPath() + "/index.md");
+                        config.createNewFile();
+                        JsonAPI.initJSONConfigFile(config);
+                        System.out.println("File created : " + config.getName());
+                        index.createNewFile();
+                        MdAPI.initMdIndexFile(index);
+                        System.out.println("File created : " + index.getName());
+                        File templateDir = new File(targetDirectory.getPath() + "/template");
+                        if (templateDir.mkdirs()) {
+                            File layout = new File(templateDir.getPath() + "/layout.html");
+                            layout.createNewFile();
+                            TemplateHTML.initLayoutFile(layout);
+                            System.out.println("File created : " + layout.getName());
+                        }
                     }
                 }
             }
