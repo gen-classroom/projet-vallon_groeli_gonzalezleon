@@ -32,13 +32,13 @@ public class Build implements Callable<Integer> {
    @Override
    public Integer call() {
 
-      File currentDirectory;
+      File baseDirectory;
       try {
          String path = new File(".").getCanonicalPath();
-         if (sitePath!=null){
-            path+= sitePath;
+         if (sitePath != null) {
+            path += sitePath;
          }
-         currentDirectory = new File(path);
+         baseDirectory = new File(path);
       } catch (IOException e) {
          System.err.println("Error while reading current directory");
          e.printStackTrace();
