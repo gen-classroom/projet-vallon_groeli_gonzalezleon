@@ -27,12 +27,18 @@ public class Build implements Callable<Integer> {
 
    @CommandLine.Option(names = {"-w", "--watching"},
                        description = "Enables background continuous analysis of the project") boolean watching;
+   @CommandLine.Option(names = {"-p", "--path"}, description = "Specific path to main directory") String sitePath;
 
    @Override
    public Integer call() {
-      File baseDirectory;
+
+      File currentDirectory;
       try {
-         baseDirectory = new File(new File(".").getCanonicalPath());
+         String path = new File(".").getCanonicalPath();
+         if (sitePath!=null){
+            path+= sitePath;
+         }
+         currentDirectory = new File(path);
       } catch (IOException e) {
          System.err.println("Error while reading current directory");
          e.printStackTrace();
