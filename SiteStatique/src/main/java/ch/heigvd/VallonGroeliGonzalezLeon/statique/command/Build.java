@@ -110,7 +110,7 @@ public class Build implements Callable<Integer> {
                for (WatchEvent<?> event : key.pollEvents()) {
                   WatchEvent.Kind<?> kind = event.kind();
                   WatchEvent<Path> ev = (WatchEvent<Path>) event;
-                  Path filename = ev.context();
+                  Path filename = ev.context().toAbsolutePath();
 
                   switch (FileType.getFileTypeFromFile(filename.toFile(), baseDirectory)) {
                      case MD:

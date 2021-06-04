@@ -50,6 +50,8 @@ class BuildTest {
       MdAPI.initMdIndexFile(fileIndex);
       JsonAPI.initJSONConfigFile(fileConfig);
       TemplateHTML.initLayoutFile(layout);
+      new CommandLine(new Statique()).execute("init", "/tmp/workspace");
+
    }
 
    @AfterEach
@@ -63,6 +65,11 @@ class BuildTest {
       fileConfig.delete();
       FileUtils.deleteDirectory(templateDir);
       FileUtils.deleteDirectory(buildDirectory);
+
+      File workspace = new File(new File(".").getCanonicalPath()+"/tmp");
+      if (workspace.exists()){
+         FileUtils.deleteDirectory(workspace);
+      }
    }
 
    @Test
@@ -93,11 +100,10 @@ class BuildTest {
 
    @Test
    void testBuildWorksWithOption() throws IOException {
-      new CommandLine(new Statique()).execute("init", "/workspace");
-      File testDirectory = new File(new File(".").getCanonicalPath()+"/workspace");
+      File testDirectory = new File(new File(".").getCanonicalPath()+"/tmp/workspace");
       assertTrue(testDirectory.exists());
       File buildDirectory = new File(testDirectory.getPath() + "\\build");
-      new CommandLine(new Statique()).execute("build", "-p=/workspace");
+      new CommandLine(new Statique()).execute("build", "-p=/tmp/workspace");
       assertTrue(buildDirectory.exists());
       File index = new File(buildDirectory.getPath() + "/index.html");
       assertTrue(index.exists());
@@ -109,7 +115,6 @@ class BuildTest {
               "sous-titre</h2>\n<p>Le contenu de mon article.</p>\n\n</body>\n</html>";
       expectedContent = expectedContent.replace("\n", "").replace("\r", "");
       assertEquals(expectedContent, content);
-      FileUtils.deleteDirectory(testDirectory);
    }
 
    @Test
@@ -176,14 +181,16 @@ class BuildTest {
 
    @Test
    void watchingWorksCorrectlyMD() throws IOException {
-      File testDirectory = new File(new File(".").getCanonicalPath());
-      File fileIndex = new File(testDirectory + "/index.md");
-      File buildDirectory = new File(new File(".").getCanonicalPath() + "/build");
+      File testDirectory = new File(new File(".").getCanonicalPath()+"/tmp/workspace");
+      File mdIndex = new File(testDirectory + "/index.md");
+      File buildDirectory = new File(testDirectory.getPath() + "/build");
+      File toDeleteMd = new File(new File(".").getCanonicalPath()+"/index.md");
+      toDeleteMd.delete();
 
-      Thread thread = new Thread(() -> new CommandLine(new Statique()).execute("build", "-w"));
+      Thread thread = new Thread(() -> new CommandLine(new Statique()).execute("build", "-w", "-p=/tmp/workspace"));
       thread.start();
       try {
-         Thread.sleep(2000);
+         Thread.sleep(3000);
       } catch (InterruptedException e) {
          e.printStackTrace();
       }
@@ -199,16 +206,16 @@ class BuildTest {
               "sous-titre</h2>\n<p>Le contenu de mon article.</p>\n\n</body>\n</html>";
       expectedContent = expectedContent.replace("\n", "").replace("\r", "");
       assertEquals(expectedContent, content);
-      fileIndex.delete();
+      mdIndex.delete();
       try {
-         Thread.sleep(1000);
+         Thread.sleep(2000);
       } catch (InterruptedException e) {
          e.printStackTrace();
       }
       assertFalse(index.exists());
 
-      fileIndex.createNewFile();
-      MdAPI.initMdIndexFile(fileIndex);
+      mdIndex.createNewFile();
+      MdAPI.initMdIndexFile(mdIndex);
 
       try {
          Thread.sleep(2000);
