@@ -1,5 +1,7 @@
 # Site statique : manuel utilisateur 
 
+
+
 ## Installation
 
 Dans un premier temps,télécharger le fichier zip du projet de Github. Extraire le projet et le placer dans un emplacement au choix. Se placer ensuite dans le dossier au niveau de "projet-vallon_groeli_gonzalezleon-master/projet-vallon_groeli_gonzalezleon-master/SiteStatique"  (s'assurer que ce soit bien le dossier qui contient le pom.xml) et exécuter les commandes suivantes dans le shell de git :
@@ -38,15 +40,40 @@ L'application statique permet, en utilisant 4 commandes,  d'initialiser, de cré
 
 Un exemple d'utilisation de notre application est le suivant :
 
-1. Créer le dossier contenant le fichier markdown et json contenant les  informations de la page principale en utilisant la commande init. Par  exemple utiliser *statique init /mon/site*.
-2. Modifier les fichiers markdown et/ou json, pour ajouter du contenu au site et modifier son header.
-3. Construire le site en utilisant la commande *statique build*. Le document html créé sera placé dans le dossier build.
-4. Visualiser le résultat dans le navigateur web par défaut avec la commande *statique serve*, effectuer des modification 
-5. Nettoyer le projet, c'est-à-dire supprimer le dossier build pour pouvoir le reconstruire entièrement en utilisant la commande *statique clean* (pouvoir par exemple visualiser le résultat des modifications). 
+1. Créer le dossier contenant le fichier markdown et json contenant les informations de la page principale en utilisant la commande init. Par exemple utiliser *statique init /mon/site*.
+
+Résultat obtenu dans le terminal Window :
+
+![image-20210604113758748](C:\Users\jaden\AppData\Roaming\Typora\typora-user-images\image-20210604113758748.png)
+
+Dans le répertoire /mon/site on obtient le résultat suivant :
+
+![image-20210604113925125](C:\Users\jaden\AppData\Roaming\Typora\typora-user-images\image-20210604113925125.png)
+
+Le dossier template contient le fichier layout.html.
+
+1. Modifier les fichiers markdown et/ou json, pour ajouter du contenu au site et modifier son header.
+
+Dans l'exemple qui suit on modifie le fichier index.md. Se référer à la section plus bas pour les différents fichiers modifiables et les différentes parties du fichiers qui sont modifiables par l'utilisateur. 
+
+![image-20210604114430688](C:\Users\jaden\AppData\Roaming\Typora\typora-user-images\image-20210604114430688.png)
+
+1. Construire le site en utilisant la commande *statique build*. Le document html créé sera placé dans le dossier build.
+
+![image-20210604114544820](C:\Users\jaden\AppData\Roaming\Typora\typora-user-images\image-20210604114544820.png)
+
+
+
+1. Visualiser le résultat dans le navigateur web par défaut avec la commande *statique serve*, effectuer des modification 
+2. Nettoyer le projet, c'est-à-dire supprimer le dossier build pour pouvoir le reconstruire entièrement en utilisant la commande *statique clean* (pouvoir par exemple visualiser le résultat des modifications). 
 
 A partir de ce point, dès que le résultat est satisfaisant, il n'y a plus qu'à utiliser le fichier html produit et le mettre dans un serveur html. Si en revanche il faut rajouter plus de contenu, ou modifier le contenu déjà existant :
 
-1. Modifier le site en modifiant le fichier markdown et/ou  json. Puis, avant de réutiliser la commande build, il faut utiliser *statique clean* pour enlever les fichiers contenu dans le dossier build.
+1. Modifier le site en modifiant le fichier markdown et/ou json. Puis, avant de réutiliser la commande build, il faut utiliser *statique clean* pour enlever les fichiers contenu dans le dossier build.
 
 Ce cycle peut être répété autant que voulu.
+
+## Fichiers modifiables :
+
+
 
