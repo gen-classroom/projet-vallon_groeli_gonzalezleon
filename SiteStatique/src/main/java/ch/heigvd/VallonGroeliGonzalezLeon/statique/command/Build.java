@@ -10,6 +10,7 @@ import picocli.CommandLine;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.concurrent.Callable;
 
 
@@ -102,6 +103,28 @@ public class Build implements Callable<Integer> {
       try {
          WatchService watcher = FileSystems.getDefault().newWatchService();
          Path dir = baseDirectory.toPath();
+         Files.walkFileTree(dir, new FileVisitor<Path>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+               //ajouter les modifs de build
+               return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+               return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+               return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+               return FileVisitResult.CONTINUE;
+            }
+         });
          dir.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE,
                       StandardWatchEventKinds.ENTRY_MODIFY);
          while (true) {
@@ -110,7 +133,7 @@ public class Build implements Callable<Integer> {
                for (WatchEvent<?> event : key.pollEvents()) {
                   WatchEvent.Kind<?> kind = event.kind();
                   WatchEvent<Path> ev = (WatchEvent<Path>) event;
-                  Path filename = ev.context().toAbsolutePath();
+                  Path filename = dir.resolve(ev.context());
 
                   switch (FileType.getFileTypeFromFile(filename.toFile(), baseDirectory)) {
                      case MD:
@@ -145,7 +168,7 @@ public class Build implements Callable<Integer> {
    private void handleMd(WatchEvent<Path> event, File baseDirectory, TemplateHTML templateHTML) {
       // /site/machin/2/4/truc/test.md -> /site/build/machin/2/4/truc/test.md
       WatchEvent.Kind<?> kind = event.kind();
-      Path fileModified = event.context();
+      Path fileModified = baseDirectory.toPath().resolve(event.context());
       Path finalPathInMD = Util.generatePathInBuildDirectory(baseDirectory.toPath(), fileModified.toAbsolutePath());
       File fileHTML = new File(finalPathInMD.toString().replace(".md", ".html"));
       //File toEdit = buildDirectory.getPath() + " / " + fileModified.
@@ -178,7 +201,7 @@ public class Build implements Callable<Integer> {
            throws IOException {
       WatchEvent.Kind<?> kind = event.kind();
       if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
-         if (event.context().toAbsolutePath().toFile().exists()) {
+         if (baseDirectory.toPath().resolve(event.context()).toAbsolutePath().toFile().exists()) {
             templateHTML = new TemplateHTML(layoutFile, jsonFile);
             if (buildDirectory.exists()) {
                try {
@@ -207,7 +230,7 @@ public class Build implements Callable<Integer> {
     */
    private void handleDirectory(WatchEvent<Path> event, TemplateHTML templateHTML, File baseDirectory) {
       WatchEvent.Kind<?> kind = event.kind();
-      Path path = event.context();
+      Path path = baseDirectory.toPath().resolve(event.context());
       if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
          try {
             Path pathUtil = Util.generatePathInBuildDirectory(baseDirectory.toPath(), path.toAbsolutePath());
@@ -225,9 +248,8 @@ public class Build implements Callable<Integer> {
    private void handleImage(WatchEvent<Path> event, File baseDirectory) {
       WatchEvent.Kind<?> kind = event.kind();
       if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
-         File source = event.context().toFile();
-         File dest =
-                 Util.generatePathInBuildDirectory(baseDirectory.toPath(), event.context().toAbsolutePath()).toFile();
+         File source = baseDirectory.toPath().resolve(event.context()).toFile();
+         File dest = Util.generatePathInBuildDirectory(baseDirectory.toPath(), source.toPath()).toFile();
          try {
             FileUtils.copyFile(source, dest);
          } catch (IOException e) {
@@ -235,10 +257,11 @@ public class Build implements Callable<Integer> {
          }
       } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
          if (event.context().toAbsolutePath().toFile().exists()) {
-            File dest = Util.generatePathInBuildDirectory(baseDirectory.toPath(), event.context().toAbsolutePath())
-                            .toFile();
+            File dest = Util.generatePathInBuildDirectory(baseDirectory.toPath(),
+                                                          baseDirectory.toPath().resolve(event.context())
+                                                                       .toAbsolutePath()).toFile();
             dest.delete();
-            File source = event.context().toFile();
+            File source = baseDirectory.toPath().resolve(event.context()).toFile();
             try {
                FileUtils.copyFile(source, dest);
             } catch (IOException e) {
@@ -246,8 +269,9 @@ public class Build implements Callable<Integer> {
             }
          }
       } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
-         File dest =
-                 Util.generatePathInBuildDirectory(baseDirectory.toPath(), event.context().toAbsolutePath()).toFile();
+         File dest = Util.generatePathInBuildDirectory(baseDirectory.toPath(),
+                                                       baseDirectory.toPath().resolve(event.context()).toAbsolutePath())
+                         .toFile();
          dest.delete();
       }
    }
