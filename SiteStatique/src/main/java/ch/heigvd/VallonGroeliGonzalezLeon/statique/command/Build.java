@@ -4,10 +4,13 @@ package ch.heigvd.VallonGroeliGonzalezLeon.statique.command;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api.TemplateHTML;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.util.Util;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import picocli.CommandLine;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.concurrent.Callable;
 
 
@@ -23,24 +26,26 @@ import java.util.concurrent.Callable;
                                    "directory. ")
 public class Build implements Callable<Integer> {
 
+   @CommandLine.Option(names = {"-w", "--watching"},
+                       description = "Enables background continuous analysis of the project") boolean watching;
    @CommandLine.Option(names = {"-p", "--path"}, description = "Specific path to main directory") String sitePath;
 
    @Override
    public Integer call() {
 
-      File currentDirectory;
+      File baseDirectory;
       try {
          String path = new File(".").getCanonicalPath();
-         if (sitePath!=null){
-            path+= sitePath;
+         if (sitePath != null) {
+            path += sitePath;
          }
-         currentDirectory = new File(path);
+         baseDirectory = new File(path);
       } catch (IOException e) {
          System.err.println("Error while reading current directory");
          e.printStackTrace();
          return 2;
       }
-      File buildDirectory = new File(currentDirectory.getPath() + "\\build");
+      File buildDirectory = new File(baseDirectory.getPath() + "\\build");
       if (buildDirectory.exists()) {
          try {
             FileUtils.deleteDirectory(buildDirectory);
@@ -51,19 +56,19 @@ public class Build implements Callable<Integer> {
       }
       buildDirectory.mkdir();
 
-      File jsonFile = new File(currentDirectory.getPath() + "/config.json");
+      File jsonFile = new File(baseDirectory.getPath() + "/config.json");
       if (!jsonFile.exists()) {
          System.err.println("Config file missing");
          return 1;
       }
 
-      File layoutFile = new File(currentDirectory.getPath() + "/template/layout.html");
+      File layoutFile = new File(baseDirectory.getPath() + "/template/layout.html");
       if (!layoutFile.exists()) {
          System.err.println("Layout file missing");
          return 1;
       }
 
-      File mdIndexFile = new File(currentDirectory.getPath() + "/index.md");
+      File mdIndexFile = new File(baseDirectory.getPath() + "/index.md");
       if (!mdIndexFile.exists()) {
          System.err.println("Main md file missing");
          return 1;
@@ -76,73 +81,221 @@ public class Build implements Callable<Integer> {
          return 2;
       }
 
-      String indexContent;
       try {
-         indexContent = templateHTML.generatePage(mdIndexFile);
+         buildAll(templateHTML, mdIndexFile, baseDirectory, buildDirectory);
       } catch (IOException e) {
-         System.err.println("Error while reading the mdFile");
          return 2;
       }
 
-
-      try {
-         File indexHtmlFile = new File(buildDirectory.getPath() + "/index.html");
-         Util.writeFile(indexContent, new BufferedWriter(
-                 new OutputStreamWriter(new FileOutputStream(indexHtmlFile), StandardCharsets.UTF_8)));
-         Util.copyImages(currentDirectory, buildDirectory);
-      } catch (IOException e) {
-         System.err.println("Error while writing the html file");
-         return 2;
+      if (!watching) {
+         return 0;
       }
+      /**
+       * Ajouter un warning : ne pas modifier le dossier build (supprimer,...) pendant que la commande tourne en
+       * background, ni le nom du dossier template
+       *
+       * - md : recompiler fichier on create,modify et supprimer si delete
+       * - json,template : tout recompiler on modify et lancer une erreur on delete
+       * - images : déplacer dans le dossier build correspondant on create, modify, supprimer on delete
+       * - dir : compiler le dossier en cas de création, supprime en cas de delete, et changer le nom du dossier
+       * build en cas de modify
+       */
+      try {
+         WatchService watcher = FileSystems.getDefault().newWatchService();
+         Path dir = baseDirectory.toPath();
+         Files.walkFileTree(dir, new FileVisitor<Path>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+               //ajouter les modifs de build
+               return FileVisitResult.CONTINUE;
+            }
 
-      for (File f : currentDirectory.listFiles()) {
-         if (f.isDirectory() && !f.getName().equals("build")) {
-            File futurBuildDir = new File(buildDirectory.getPath() + "/" + f.getName());
-            try {
-               recursiveBuild(templateHTML, f, futurBuildDir);
-            } catch (IOException e) {
-               return 2;
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+               return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+               return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+               return FileVisitResult.CONTINUE;
+            }
+         });
+         dir.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE,
+                      StandardWatchEventKinds.ENTRY_MODIFY);
+         while (true) {
+            WatchKey key = watcher.take();
+            while (key != null) {
+               for (WatchEvent<?> event : key.pollEvents()) {
+                  WatchEvent.Kind<?> kind = event.kind();
+                  WatchEvent<Path> ev = (WatchEvent<Path>) event;
+                  Path filename = dir.resolve(ev.context());
+
+                  switch (FileType.getFileTypeFromFile(filename.toFile(), baseDirectory)) {
+                     case MD:
+                        handleMd(ev, baseDirectory, templateHTML);
+                        break;
+                     case IMAGE:
+                        handleImage(ev, baseDirectory);
+                        break;
+                     case CONFIG:
+                     case LAYOUT:
+                        templateHTML =
+                                handleConfigAndLayout(ev, templateHTML, mdIndexFile, baseDirectory, buildDirectory,
+                                                      layoutFile, jsonFile);
+                        break;
+                     case DIRECTORY:
+                        handleDirectory(ev, templateHTML, baseDirectory);
+                        break;
+                     case OTHER:
+                        break;
+                  }
+               }
+               key.reset();
+               key = watcher.take();
             }
          }
+      } catch (IOException | InterruptedException e) {
       }
-
       return 0;
+   }
+
+
+   private void handleMd(WatchEvent<Path> event, File baseDirectory, TemplateHTML templateHTML) {
+      // /site/machin/2/4/truc/test.md -> /site/build/machin/2/4/truc/test.md
+      WatchEvent.Kind<?> kind = event.kind();
+      Path fileModified = baseDirectory.toPath().resolve(event.context());
+      Path finalPathInMD = Util.generatePathInBuildDirectory(baseDirectory.toPath(), fileModified.toAbsolutePath());
+      File fileHTML = new File(finalPathInMD.toString().replace(".md", ".html"));
+      //File toEdit = buildDirectory.getPath() + " / " + fileModified.
+
+      if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
+         if (event.context().toFile().length() > 0) {
+            try {
+               createHTMLPage(templateHTML, fileModified.toAbsolutePath().toFile(), finalPathInMD.getParent().toFile());
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
+         }
+      } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
+         if (fileModified.toAbsolutePath().toFile().exists()) {
+            fileHTML.delete();
+            try {
+               createHTMLPage(templateHTML, fileModified.toAbsolutePath().toFile(), finalPathInMD.getParent().toFile());
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
+         }
+      } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
+         fileHTML.delete();
+      }
+   }
+
+
+   private TemplateHTML handleConfigAndLayout(WatchEvent<Path> event, TemplateHTML templateHTML, File mdIndexFile,
+                                              File baseDirectory, File buildDirectory, File layoutFile, File jsonFile)
+           throws IOException {
+      WatchEvent.Kind<?> kind = event.kind();
+      if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
+         if (baseDirectory.toPath().resolve(event.context()).toAbsolutePath().toFile().exists()) {
+            templateHTML = new TemplateHTML(layoutFile, jsonFile);
+            if (buildDirectory.exists()) {
+               try {
+                  FileUtils.deleteDirectory(buildDirectory);
+               } catch (IOException e) {
+                  e.printStackTrace();
+                  System.err.println("Build directory deletion failure.");
+               }
+            }
+            buildDirectory.mkdir();
+            buildAll(templateHTML, mdIndexFile, baseDirectory, buildDirectory);
+            return templateHTML;
+         }
+      } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
+         //TODO arreter programme?
+         System.err.println("Error : if you delete or rename the config.json or layout.html files, the application " +
+                            "will not work properly");
+      }
+      return templateHTML;
+   }
+
+   /* - images : déplacer dans le dossier build correspondant on create, modify, supprimer on delete
+    * - dir : compiler le dossier en cas de création, supprime en cas de delete, et changer le nom du dossier
+    * build en cas de modify
+    * En cas de modif : on gere pas car pas moyen de recuperer l'ancien nom du fichier
+    */
+   private void handleDirectory(WatchEvent<Path> event, TemplateHTML templateHTML, File baseDirectory) {
+      WatchEvent.Kind<?> kind = event.kind();
+      Path path = baseDirectory.toPath().resolve(event.context());
+      if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
+         try {
+            Path pathUtil = Util.generatePathInBuildDirectory(baseDirectory.toPath(), path.toAbsolutePath());
+            recursiveBuild(templateHTML, path.toAbsolutePath().toFile(), pathUtil.toAbsolutePath().toFile());
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
+         Path pathUtil = Util.generatePathInBuildDirectory(baseDirectory.toPath(), path.toAbsolutePath());
+         File file = pathUtil.toFile();
+         file.delete();
+      }
+   }
+
+   private void handleImage(WatchEvent<Path> event, File baseDirectory) {
+      WatchEvent.Kind<?> kind = event.kind();
+      if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
+         File source = baseDirectory.toPath().resolve(event.context()).toFile();
+         File dest = Util.generatePathInBuildDirectory(baseDirectory.toPath(), source.toPath()).toFile();
+         try {
+            FileUtils.copyFile(source, dest);
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      } else if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
+         if (event.context().toAbsolutePath().toFile().exists()) {
+            File dest = Util.generatePathInBuildDirectory(baseDirectory.toPath(),
+                                                          baseDirectory.toPath().resolve(event.context())
+                                                                       .toAbsolutePath()).toFile();
+            dest.delete();
+            File source = baseDirectory.toPath().resolve(event.context()).toFile();
+            try {
+               FileUtils.copyFile(source, dest);
+            } catch (IOException e) {
+               e.printStackTrace();
+            }
+         }
+      } else if (kind == StandardWatchEventKinds.ENTRY_DELETE) {
+         File dest = Util.generatePathInBuildDirectory(baseDirectory.toPath(),
+                                                       baseDirectory.toPath().resolve(event.context()).toAbsolutePath())
+                         .toFile();
+         dest.delete();
+      }
    }
 
    /**
     * Creates html files from md in subdirs, and translates all the images found
     *
     * @param templateHTML
-    * @param currentDir
+    * @param currentDirectory
     * @param currentBuildDir
     *
     * @throws IOException
     */
-   private void recursiveBuild(TemplateHTML templateHTML, File currentDir, File currentBuildDir) throws IOException {
-      if (currentDir.listFiles() != null) {
-         for (File f : currentDir.listFiles()) {
-            if (f.getName().contains(".md")) {
+   private void recursiveBuild(TemplateHTML templateHTML, File currentDirectory, File currentBuildDir)
+           throws IOException {
+      if (currentDirectory.listFiles() != null) {
+         for (File f : currentDirectory.listFiles()) {
+            if (f.getName().toLowerCase().endsWith(".md")) {
                currentBuildDir.mkdir();
-               String htmlContent;
-               try {
-                  htmlContent = templateHTML.generatePage(f);
-               } catch (IOException e) {
-                  System.err.println("Error while reading the mdFile");
-                  throw e;
-               }
-               try {
-                  String fileName = "/" + f.getName().replace(".md", "") + ".html";
-                  File indexHtmlFile = new File(currentBuildDir.getPath() + fileName);
-                  Util.writeFile(htmlContent, new BufferedWriter(
-                          new OutputStreamWriter(new FileOutputStream(indexHtmlFile), StandardCharsets.UTF_8)));
-               } catch (IOException e) {
-                  System.err.println("Error while writing the html file");
-                  throw e;
-               }
+               createHTMLPage(templateHTML, f, currentBuildDir);
             }
          }
-         Util.copyImages(currentDir, currentBuildDir);
-         for (File f : currentDir.listFiles()) {
+         Util.copyImages(currentDirectory, currentBuildDir);
+         for (File f : currentDirectory.listFiles()) {
             if (f.isDirectory() && !f.getName().equals("build")) {
                File futurBuildDir = new File(currentBuildDir.getPath() + "/" + f.getName());
                recursiveBuild(templateHTML, f, futurBuildDir);
@@ -151,5 +304,87 @@ public class Build implements Callable<Integer> {
       }
    }
 
+
+   private void createHTMLPage(TemplateHTML templateHTML, File mdFile, File targetDirectory) throws IOException {
+      String htmlContent;
+      try {
+         htmlContent = templateHTML.generatePage(mdFile);
+      } catch (IOException e) {
+         System.err.println("Error while reading the mdFile");
+         throw e;
+      }
+      try {
+         String fileName = "/" + mdFile.getName().substring(0, mdFile.getName().length() - 3) + ".html";
+         File indexHtmlFile = new File(targetDirectory.getPath() + fileName);
+         Util.writeFile(htmlContent, new BufferedWriter(
+                 new OutputStreamWriter(new FileOutputStream(indexHtmlFile), StandardCharsets.UTF_8)));
+      } catch (IOException e) {
+         System.err.println("Error while writing the html file");
+         throw e;
+      }
+   }
+
+   private void buildAll(TemplateHTML templateHTML, File mdIndexFile, File baseDirectory, File buildDirectory)
+           throws IOException {
+      String indexContent;
+      try {
+         indexContent = templateHTML.generatePage(mdIndexFile);
+      } catch (IOException e) {
+         System.err.println("Error while reading the mdFile");
+         throw e;
+      }
+
+      try {
+         File indexHtmlFile = new File(buildDirectory.getPath() + "/index.html");
+         Util.writeFile(indexContent, new BufferedWriter(
+                 new OutputStreamWriter(new FileOutputStream(indexHtmlFile), StandardCharsets.UTF_8)));
+         Util.copyImages(baseDirectory, buildDirectory);
+      } catch (IOException e) {
+         System.err.println("Error while writing the html file");
+         throw e;
+      }
+
+      for (File f : baseDirectory.listFiles()) {
+         if (f.isDirectory() && !f.getName().equals("build")) {
+            File futurBuildDir = new File(buildDirectory.getPath() + "/" + f.getName());
+            try {
+               recursiveBuild(templateHTML, f, futurBuildDir);
+            } catch (IOException e) {
+               throw e;
+            }
+         }
+      }
+   }
+
+   enum FileType {
+      MD, LAYOUT, CONFIG, IMAGE, DIRECTORY, OTHER;
+
+      public static FileType getFileTypeFromFile(File file, File rootDirectory) {
+         if (file.isDirectory()) {
+            return DIRECTORY;
+         }
+         String name = file.getName();
+         switch (FilenameUtils.getExtension(name).toLowerCase()) {
+            case "md":
+               return MD;
+            case "html":
+               if (name.equals("layout.html") && file.getParentFile().getName().equals("template") &&
+                   file.getParentFile().getParentFile().equals(rootDirectory)) {
+                  return LAYOUT;
+               }
+               break;
+            case "json":
+               File parent = file.toPath().toAbsolutePath().toFile().getParentFile();
+               if (name.equals("config.json") && parent.equals(rootDirectory)) {
+                  return CONFIG;
+               }
+               break;
+            case "png":
+            case "jpg":
+               return IMAGE;
+         }
+         return OTHER;
+      }
+   }
 
 }
