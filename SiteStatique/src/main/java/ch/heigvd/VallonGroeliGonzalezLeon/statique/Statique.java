@@ -1,6 +1,6 @@
 /*
  * @File Statique.java
- * @Authors : David González León
+ * @Authors : David González León, Jade Gröli, Axel Vallon
  * @Date 5 mars 2021
  */
 package ch.heigvd.VallonGroeliGonzalezLeon.statique;
@@ -23,7 +23,7 @@ import java.util.concurrent.Callable;
 
 @Command(name = "Statique", mixinStandardHelpOptions = true,
          description = "Creates and handles the generation of a statique site generator",
-         versionProvider = VersionProviderWithVariables.class,
+         versionProvider = Statique.VersionProviderWithVariables.class,
          subcommands = {Build.class, Clean.class, Init.class, Serve.class})
 public class Statique implements Callable<Integer> {
 
@@ -37,28 +37,29 @@ public class Statique implements Callable<Integer> {
       CommandLine.usage(this, System.out);
       return 0;
    }
-}
 
-class VersionProviderWithVariables implements CommandLine.IVersionProvider {
-   public String[] getVersion() throws IOException, XmlPullParserException {
-      MavenXpp3Reader reader = new MavenXpp3Reader();
-      Model model;
-      if ((new File("pom.xml")).exists()) {
-         FileReader fileReader = new FileReader("pom.xml");
-         try {
-            model = reader.read(fileReader);
-         } finally {
-            fileReader.close();
+   class VersionProviderWithVariables implements CommandLine.IVersionProvider {
+      public String[] getVersion() throws IOException, XmlPullParserException {
+         MavenXpp3Reader reader = new MavenXpp3Reader();
+         Model model;
+         if ((new File("pom.xml")).exists()) {
+            FileReader fileReader = new FileReader("pom.xml");
+            try {
+               model = reader.read(fileReader);
+            } finally {
+               fileReader.close();
+            }
+         } else {
+            InputStreamReader inputStreamReader = new InputStreamReader(Statique.class.getResourceAsStream(
+                    "/META-INF/maven/ch.heigvd.VallonGroeliGonzalezLeon/SiteStatique/pom.xml"));
+            try {
+               model = reader.read(inputStreamReader);
+            } finally {
+               inputStreamReader.close();
+            }
          }
-      } else {
-         InputStreamReader inputStreamReader = new InputStreamReader(Statique.class.getResourceAsStream(
-                 "/META-INF/maven/ch.heigvd.VallonGroeliGonzalezLeon/SiteStatique/pom.xml"));
-         try {
-            model = reader.read(inputStreamReader);
-         } finally {
-            inputStreamReader.close();
-         }
+         return new String[]{model.getVersion()};
       }
-      return new String[]{model.getVersion()};
    }
+
 }

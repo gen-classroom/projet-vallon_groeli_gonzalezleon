@@ -1,3 +1,8 @@
+/*
+ * @File Build.java
+ * @Authors : David González León, Jade Gröli, Axel Vallon
+ * @Date 5 mars 2021
+ */
 package ch.heigvd.VallonGroeliGonzalezLeon.statique.command;
 
 

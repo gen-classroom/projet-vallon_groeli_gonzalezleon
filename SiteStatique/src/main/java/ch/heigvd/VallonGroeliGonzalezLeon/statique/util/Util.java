@@ -20,9 +20,13 @@ import java.util.Arrays;
 /**
  * A class for general utility functions
  */
-public class Util {
+public final class Util {
 
    private static final ArrayList<String> imageExtensionSupported = new ArrayList<>(Arrays.asList("jpg", "png"));
+
+   private Util(){
+
+   }
 
    /**
     * Copies images from the current directory to the build directory. Images must have extensions defined in the
