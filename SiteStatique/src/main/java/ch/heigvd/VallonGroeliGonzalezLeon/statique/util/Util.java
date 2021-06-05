@@ -24,7 +24,7 @@ public final class Util {
 
    private static final ArrayList<String> imageExtensionSupported = new ArrayList<>(Arrays.asList("jpg", "png"));
 
-   private Util(){
+   private Util() {
 
    }
 
@@ -33,7 +33,7 @@ public final class Util {
     * imageExtensionSupported ArrayList
     *
     * @param currentDirectory the directory where the images are located
-    * @param buildDirectory the destination directory
+    * @param buildDirectory   the destination directory
     *
     * @return - 0 if the images were copied succesfully or if there was no image to copy
     *         - 1 if there was an error while copying the images
@@ -89,18 +89,18 @@ public final class Util {
       try {
          writer.write(content);
          writer.flush();
-      }finally {
+      } finally {
          writer.close();
       }
    }
 
    /**
-    *
     * @param baseDirectory
     * @param file
+    *
     * @return
     */
-   public static Path generatePathInBuildDirectory(Path baseDirectory, Path file){
+   public static Path generatePathInBuildDirectory(Path baseDirectory, Path file) {
       String endOfPath = file.toString().substring(baseDirectory.toString().length());
       return Paths.get(baseDirectory + "/build/" + endOfPath);
    }
