@@ -13,11 +13,18 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 
-public class JsonAPI {
+/**
+ * A class containing methods that allow to analyse and create the config.json file. This class is final and cannot
+ * be instantiated.
+ */
+public final class JsonAPI {
+
+   private JsonAPI() {}
+
    /**
-    * Put the content of default website parameters (charset, site description and keywords)
+    * Put the content of default website parameters (charset, site description and keywords) into the given file.
     *
-    * @param emptyFile This file must exist, and be empty
+    * @param emptyFile The target file to initialize. This file must exist, and be empty.
     *
     * @throws IOException              if the file does not exist or is not writtable
     * @throws IllegalArgumentException the file must be empty
@@ -25,23 +32,22 @@ public class JsonAPI {
    public static void initJSONConfigFile(File emptyFile) throws IOException, IllegalArgumentException {
       JSONObject conf = new JSONObject();
       if (emptyFile.length() > 0) { throw new IllegalArgumentException(); }
-      // contenu par défaut
-      conf.put("charset", "UTF-8");
-      conf.put("siteTitle", "My statique website");
-      conf.put("keywords", "HTML, CSS, JavaScript");
-      conf.put("domain", "www.monsite.ch");
-      conf.put("language", "FR");
+      conf.put(JsonParameters.CHARSET.getName(), JsonParameters.CHARSET.getDefaultValue());
+      conf.put(JsonParameters.SITE_TITLE.getName(), JsonParameters.SITE_TITLE.getDefaultValue());
+      conf.put(JsonParameters.KEYWORDS.getName(), JsonParameters.KEYWORDS.getDefaultValue());
+      conf.put(JsonParameters.DOMAIN.getName(), JsonParameters.DOMAIN.getDefaultValue());
+      conf.put(JsonParameters.LANGUAGE.getName(), JsonParameters.LANGUAGE.getDefaultValue());
 
       Util.writeFile(conf.toString(), new FileWriter(emptyFile));
    }
 
    /**
-    * Fonction that return the content of a JSON file.
-    * If the file is empty, it return an empty map
+    * Fonction that return the content of a JSON file in the form of a JsonContent instance.
     *
     * @param file file containing the json parameters
     *
-    * @return the JsonContent
+    * @return If the file is empty, it returns null, otherwise it returns a JsonContent instance containing the value
+    *         of the parameters found in the given file, or null if the parameter is not in the file
     *
     * @throws IOException the file must exist and be readable
     */
@@ -52,9 +58,11 @@ public class JsonAPI {
          return null;
       }
       JSONObject obj = new JSONObject(chaine);
-      return new JsonContent(getStringContent(obj, "charset"), getStringContent(obj, "domain"),
-                             getStringContent(obj, "keywords"), getStringContent(obj, "siteTitle"),
-                             getStringContent(obj, "language"));
+      return new JsonContent(getStringContent(obj, JsonParameters.CHARSET.getName()),
+                             getStringContent(obj, JsonParameters.DOMAIN.getName()),
+                             getStringContent(obj, JsonParameters.KEYWORDS.getName()),
+                             getStringContent(obj, JsonParameters.SITE_TITLE.getName()),
+                             getStringContent(obj, JsonParameters.LANGUAGE.getName()));
 
    }
 
@@ -68,6 +76,26 @@ public class JsonAPI {
       return getStringContent;
    }
 
+   /**
+    * An enum describing the different options available in the config.json file and their default value
+    */
+   enum JsonParameters {
+
+      CHARSET("charset", "UTF-8"), DOMAIN("domain", "www.monsite.ch"), KEYWORDS("keywords", "HTML, CSS, JavaScript"),
+      SITE_TITLE("siteTitle", "My statique website"), LANGUAGE("language", "FR");
+
+      @Getter private final String name;
+      @Getter private final String defaultValue;
+
+      JsonParameters(String name, String defaultValue) {
+         this.name = name;
+         this.defaultValue = defaultValue;
+      }
+   }
+
+   /**
+    * A class containing the parameters extracted from a config.json file
+    */
    static class JsonContent {
       @Getter private final String charset;
       @Getter private final String domain;
@@ -76,6 +104,15 @@ public class JsonAPI {
       @Getter private final String language;
 
 
+      /**
+       * Instantiates a new Json content.
+       *
+       * @param charset   the charset parameter in the config.json file
+       * @param domain    the domain parameter in the config.json file
+       * @param keywords  the keywords parameter in the config.json file
+       * @param siteTitle the site title parameter in the config.json file
+       * @param language  the language parameter in the config.json file
+       */
       public JsonContent(String charset, String domain, String keywords, String siteTitle, String language) {
          this.charset = charset;
          this.domain = domain;
@@ -84,4 +121,6 @@ public class JsonAPI {
          this.language = language;
       }
    }
+
+
 }
