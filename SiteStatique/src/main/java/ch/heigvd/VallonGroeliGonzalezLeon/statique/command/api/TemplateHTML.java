@@ -20,6 +20,7 @@ import java.util.Map;
 /**
  * This class allows to generate html pages from md files following a specific format, using a html file for the
  * layout of the generated page, and a json file for specific parameters.
+ * Uses {@link MdAPI} and {@link JsonAPI} classes to analyse md and json files
  */
 public class TemplateHTML {
    private final JsonAPI.JsonContent jsonContent;
