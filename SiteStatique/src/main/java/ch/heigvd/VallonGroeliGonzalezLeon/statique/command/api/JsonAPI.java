@@ -81,8 +81,26 @@ public final class JsonAPI {
     */
    enum JsonParameters {
 
-      CHARSET("charset", "UTF-8"), DOMAIN("domain", "www.monsite.ch"), KEYWORDS("keywords", "HTML, CSS, JavaScript"),
-      SITE_TITLE("siteTitle", "My statique website"), LANGUAGE("language", "FR");
+      /**
+       * The charset for the site
+       */
+      CHARSET("charset", "UTF-8"),
+      /**
+       * The domain of the site
+       */
+      DOMAIN("domain", "www.monsite.ch"),
+      /**
+       * The keywords of the site
+       */
+      KEYWORDS("keywords", "HTML, CSS, JavaScript"),
+      /**
+       * The Site's title.
+       */
+      SITE_TITLE("siteTitle", "My statique website"),
+      /**
+       * the language of the site
+       */
+      LANGUAGE("language", "FR");
 
       @Getter private final String name;
       @Getter private final String defaultValue;
@@ -121,6 +139,4 @@ public final class JsonAPI {
          this.language = language;
       }
    }
-
-
 }
