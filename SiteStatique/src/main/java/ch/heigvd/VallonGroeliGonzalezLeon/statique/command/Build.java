@@ -318,11 +318,11 @@ public class Build implements Callable<Integer> {
          System.err.println("Error while reading the mdFile");
          throw e;
       }
-      try {
-         String fileName = "/" + mdFile.getName().substring(0, mdFile.getName().length() - 3) + ".html";
-         File indexHtmlFile = new File(targetDirectory.getPath() + fileName);
-         Util.writeFile(htmlContent, new BufferedWriter(
-                 new OutputStreamWriter(new FileOutputStream(indexHtmlFile), StandardCharsets.UTF_8)));
+      String fileName = "/" + mdFile.getName().substring(0, mdFile.getName().length() - 3) + ".html";
+      File indexHtmlFile = new File(targetDirectory.getPath() + fileName);
+      try (BufferedWriter writer = new BufferedWriter(
+              new OutputStreamWriter(new FileOutputStream(indexHtmlFile), StandardCharsets.UTF_8))) {
+         Util.writeFile(htmlContent, writer);
       } catch (IOException e) {
          System.err.println("Error while writing the html file");
          throw e;
@@ -339,10 +339,10 @@ public class Build implements Callable<Integer> {
          throw e;
       }
 
-      try {
-         File indexHtmlFile = new File(buildDirectory.getPath() + "/index.html");
-         Util.writeFile(indexContent, new BufferedWriter(
-                 new OutputStreamWriter(new FileOutputStream(indexHtmlFile), StandardCharsets.UTF_8)));
+      File indexHtmlFile = new File(buildDirectory.getPath() + "/index.html");
+      try (BufferedWriter writer = new BufferedWriter(
+              new OutputStreamWriter(new FileOutputStream(indexHtmlFile), StandardCharsets.UTF_8))) {
+         Util.writeFile(indexContent, writer);
          Util.copyImages(baseDirectory, buildDirectory);
       } catch (IOException e) {
          System.err.println("Error while writing the html file");

@@ -39,8 +39,9 @@ public class TemplateHTML {
                 "<html lang=\"{{{language}}}\">\n<head>\n<meta charset=\"{{{charset}}}\">" +
                         "\n<title> {{{siteTitle}}} | {{{pageTitle}}} </title>\n</head>\n<body>\n" +
                         "{%include menu.html}\n{{{content}}}\n</body>\n</html>";
-
-        Util.writeFile(defaultContent, new FileWriter(emptyFile));
+        try (FileWriter writer = new FileWriter(emptyFile)) {
+            Util.writeFile(defaultContent, writer);
+        }
     }
 
     public String generatePage(File mdFile) throws IOException {
