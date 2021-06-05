@@ -77,7 +77,7 @@ public final class MdAPI {
       }
       StringBuilder content = new StringBuilder();
       for (int i = 4; i < lines.length; ++i) {
-         content.append(lines[i] + "\n");
+         content.append(lines[i]).append("\n");
       }
       Parser parser = Parser.builder().build();
       Node document = parser.parse(content.toString());

@@ -15,25 +15,24 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Objects;
 
+/**
+ * A version provider class. This will provide the version located in the pom.xml file
+ */
 public class VersionProviderWithVariables implements CommandLine.IVersionProvider {
    public String[] getVersion() throws IOException, XmlPullParserException {
       MavenXpp3Reader reader = new MavenXpp3Reader();
       Model model;
       if ((new File("pom.xml")).exists()) {
-         FileReader fileReader = new FileReader("pom.xml");
-         try {
+         try (FileReader fileReader = new FileReader("pom.xml")) {
             model = reader.read(fileReader);
-         } finally {
-            fileReader.close();
          }
       } else {
-         InputStreamReader inputStreamReader = new InputStreamReader(Statique.class.getResourceAsStream(
-                 "/META-INF/maven/ch.heigvd.VallonGroeliGonzalezLeon/SiteStatique/pom.xml"));
-         try {
+         try (InputStreamReader inputStreamReader = new InputStreamReader(Objects.requireNonNull(Statique.class
+                                                                                                         .getResourceAsStream(
+                                                                                                                 "/META-INF/maven/ch.heigvd.VallonGroeliGonzalezLeon/SiteStatique/pom.xml")))) {
             model = reader.read(inputStreamReader);
-         } finally {
-            inputStreamReader.close();
          }
       }
       return new String[]{model.getVersion()};

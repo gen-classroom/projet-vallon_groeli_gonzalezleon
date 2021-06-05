@@ -15,23 +15,29 @@ import picocli.CommandLine.Command;
 
 import java.util.concurrent.Callable;
 
+/**
+ * The Static class. This class is the main command of this application.
+ */
 @Command(name = "Statique", mixinStandardHelpOptions = true,
          description = "Creates and handles the generation of a statique site generator",
          versionProvider = VersionProviderWithVariables.class,
          subcommands = {Build.class, Clean.class, Init.class, Serve.class})
 public class Statique implements Callable<Integer> {
 
+   /**
+    * The entry point of application.
+    *
+    * @param args the input arguments
+    */
    public static void main(String... args) {
       int exitCode = new CommandLine(new Statique()).execute(args);
       System.exit(exitCode);
    }
 
    @Override
-   public Integer call() throws Exception { // your business logic goes here...
+   public Integer call() {
       CommandLine.usage(this, System.out);
       return 0;
    }
-
-
 }
 
