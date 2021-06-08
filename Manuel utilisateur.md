@@ -13,17 +13,19 @@ mvn clean install \
 
 ```
 
-Passer ensuite dans powershell et executez la commande suivante :
+Passer ensuite dans powershell et exécuter la commande suivante :
 
 ` $env:Path += ";VotrePathVersLeDossierbinQueVousAvezExtraitdansStatique"`
 
-Si vous rajoutez directement cette adresse dans le PATH de votre pc, vous avez plus besoin de faire cette partie.
+Il est possible d'ajouter directement cette adresse dans le PATH de votre pc pour ne plus avoir besoin d'effectuer à chaque fois cette partie.
 
-Après vous pouvez appeler l'application avec statique.bat
+L'application peut maintenant être appelée avec statique.bat.
+
+
 
 ## Liste des commandes 
 
-**Si vous voulez appeler une des sous commandes il faut les mettre derrière l'appel à statique.bat : statique.bat clean par exemple.**
+**Pour appeler une des sous commandes il faut les mettre derrière l'appel à statique.bat : statique.bat clean par exemple.**
 
 - `statique -v` ou `statique --version` : afficher la version du générateur de site statique 
 - `statique -h` ou `statique --help` :  pour obtenir de l'aide sur les commandes init, build, clean et serve. 
@@ -34,11 +36,13 @@ Après vous pouvez appeler l'application avec statique.bat
 - `statique clean` : supprime le dossier build
 - `statique serve` : ouvre un navigateur pour visualiser le résultat du site statique
 
+
+
 ## Exemple d'utilisation
 
-L'application statique permet, en utilisant 4 commandes,  d'initialiser, de créer, de gérer et de visualiser l'état du site statique. L'application est donc composée d'une commande principale, **statique**, et de 4 sous commandes principales, **init**, **build**, **clean** et **serve**. 
+L'application statique permet, en utilisant 4 commandes, d'initialiser, de créer, de gérer et de visualiser l'état du site statique. L'application est donc composée d'une commande principale, **statique**, et de 4 sous commandes principales, **init**, **build**, **clean** et **serve**. 
 
-Un exemple d'utilisation de notre application est le suivant :
+Un exemple d'utilisation de l'application est le suivant :
 
 1. Créer le dossier contenant le fichier markdown et json contenant les informations de la page principale en utilisant la commande init. Par exemple utiliser `statique init /mon/site`.
 
@@ -70,10 +74,18 @@ On obtient donc le répertoire suivant :
 
 4. Visualiser le résultat dans le navigateur web par défaut avec la commande *statique serve*, pour observer le résultat final après avoir effectué d'éventuelles modifications :
 
-![image-20210608095545421](C:\Users\jaden\AppData\Roaming\Typora\typora-user-images\image-20210608095545421.png)
+![image-20210608104349523](C:\Users\jaden\AppData\Roaming\Typora\typora-user-images\image-20210608104349523.png)
+
+
 
 5. Nettoyer le projet avec `statique clean`, c'est-à-dire supprimer le dossier build pour pouvoir le reconstruire entièrement par la suite en relançant un build (pouvoir par exemple visualiser le résultat des modifications).
-6. L'utilisateur peut choisir de générer plusieurs pages html. Pour cela il faut créer un nouveau répertoire à la base du projet créé par init et lancer la `commande statique init -m <nom répertoire créé>` pour créer un nouveau fichier markdown. L'utilisateur peut modifier ce fichier à sa convenance puis lancer un clean suivi d'un build pour construire la sous page. 
+6. L'utilisateur peut choisir de générer plusieurs pages html. Pour cela il faut créer un nouveau répertoire à la base du projet créé par init et lancer la `commande statique init -m <nom répertoire créé>` dans le sous dossier pour créer un nouveau fichier markdown. L'utilisateur peut modifier ce fichier à sa convenance puis lancer un clean suivi d'un build pour construire la sous page. 
+
+Après avoir exécuté la commande :
+
+![image-20210608105300236](C:\Users\jaden\AppData\Roaming\Typora\typora-user-images\image-20210608105300236.png)
+
+On obtient le projet suivant :
 
 ![image-20210608102854176](C:\Users\jaden\AppData\Roaming\Typora\typora-user-images\image-20210608102854176.png)
 
@@ -81,17 +93,19 @@ Dans le dossier build on obtient un nouveau dossier contenant la page html :
 
 ![image-20210608102922850](C:\Users\jaden\AppData\Roaming\Typora\typora-user-images\image-20210608102922850.png)
 
-La commande serve ne permet de visualiser uniquement le résultat de la page principale. Pour visualiser le résultat des sous-pages, il est nécessaire de créer des liens depuis la page principale vers les sous-pages.
+La commande serve permet de visualiser uniquement le résultat de la page principale associé au fichier index.md de départ. Pour visualiser le résultat des sous-pages, il est nécessaire de créer des liens depuis la page principale vers les sous-pages.
 
-7. A partir de ce point, dès que le résultat est satisfaisant, il n'y a plus qu'à utiliser le résultat html produit et le mettre dans un serveur html. 
+7. A partir de ce point, dès que le résultat est satisfaisant, il n'y a plus qu'à utiliser le résultat html produit et le mettre dans un serveur. 
 
 Ce cycle peut être répété autant que voulu.
+
+
 
 ## Fichiers modifiables :
 
 Pour personnaliser le site statique, l'utilisateur peut modifier les fichiers suivants :
 
-- tous les fichiers de type markdown : **attention** tous les fichiers de ce type doivent avoir la même structure : même titres de header suivi des 3 tirets après un retour à la ligne puis un autre retour à la ligne avec le contenu du site qui varie d'un fichier à l'autre. Le fichier markdown de la page principal doit obligatoirement garder le nom index.md mais tous les autres fichiers md qui sont créé sont nommés au choix par l'utilisateur. Les autres fichiers servent à définir les sous-pages du site. Pour chaque fichier markdown produit, une page html sera créé. 
+- tous les fichiers de type markdown : **attention tous les fichiers de ce type doivent avoir la même structure** : même titres de header suivi des 3 tirets après un retour à la ligne puis un autre retour à la ligne avec le contenu du site qui varie d'un fichier à l'autre. Pour résumer les titres du header doivent être les même mais les valeurs peuvent changer d'un fichier à l'autre et le body (après les 3 tirets et le retour à la ligne) est également complètement modifiable selon le fichier markdown. Le fichier markdown de la page principal doit obligatoirement garder le nom index.md mais tous les autres fichiers md qui sont créés sont nommés au choix par l'utilisateur. Les autres fichiers servent à définir les sous-pages du site. Pour chaque fichier markdown produit, une page html sera créée dans un sous-dossier de build après la compilation du site. 
 - config.json : les valeurs de charset, keywords, siteTitle, domain et language peuvent soit être modifiés, soit être supprimés. Attention à bien entourer les valeurs de " ".
 - template/layout.html : l'utilisateur peut modifier ou supprimer les valeurs entre triple accolades ou en ajouter. Les valeurs entre triple accolades doivent obligatoirement correspondre au titre d'une valeur du fichier config.json ou à un titre du header des fichiers du type markdown. 
 
