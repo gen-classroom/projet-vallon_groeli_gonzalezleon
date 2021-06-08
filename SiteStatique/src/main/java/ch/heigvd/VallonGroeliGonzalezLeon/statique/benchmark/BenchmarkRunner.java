@@ -11,8 +11,8 @@ public class BenchmarkRunner {
         {
             Options options = new OptionsBuilder()
                     .forks(1)
-                    .warmupIterations(1)
-                    .measurementIterations(5)
+                    .warmupIterations(3)
+                    .measurementIterations(10)
                     .build();
             new Runner(options).run();
         }
