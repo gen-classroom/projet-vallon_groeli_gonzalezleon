@@ -48,11 +48,11 @@ Un exemple d'utilisation de l'application est le suivant :
 
 Résultat obtenu dans le terminal Window :
 
-![templateStruct](./figures_user_manual/command_init.png)
+![templateStruct](./figures/command_init.png)
 
 Dans le répertoire /mon/site on obtient le résultat suivant :
 
-![templateStruct](./figures_user_manual/rep_depart.png)
+![templateStruct](./figures/rep_depart.png)
 
 Le dossier template contient le fichier layout.html.
 
@@ -60,21 +60,21 @@ Le dossier template contient le fichier layout.html.
 
 Dans l'exemple qui suit on modifie le fichier index.md. Se référer à la section plus bas pour les différents fichiers modifiables et les différentes parties du fichier qui sont modifiables par l'utilisateur. 
 
-![templateStruct](./figures_user_manual/index_modif.png)
+![index_modif](./figures/index_modif.png)
 
 3. Construire le site en utilisant la commande `statique build`. Le document html index.html créé sera placé dans un dossier build lui aussi nouvellement créé.
 
-![templateStruct](./figures_user_manual/command_build.png)
+![templateStruct](./figures/command_build.png)
 
 On obtient donc le répertoire suivant :
 
-![templateStruct](./figures_user_manual/rep_after_build.png)
+![templateStruct](./figures/rep_after_build.png)
 
 
 
 4. Visualiser le résultat dans le navigateur web par défaut avec la commande *statique serve*, pour observer le résultat final après avoir effectué d'éventuelles modifications :
 
-![templateStruct](./figures_user_manual/res_serve.png)
+![templateStruct](./figures/res_serve.png)
 
 
 
@@ -83,15 +83,15 @@ On obtient donc le répertoire suivant :
 
 Après avoir exécuté la commande :
 
-![templateStruct](./figures_user_manual/command_init_m.png)
+![templateStruct](./figures/command_init_m.png)
 
 On obtient le projet suivant :
 
-![templateStruct](./figures_user_manual/rep_after_init_m.png)
+![templateStruct](./figures/rep_after_init_m.png)
 
 Dans le dossier build on obtient un nouveau dossier contenant la page html :
 
-![templateStruct](./figures_user_manual/build_after_init_m.png)
+![templateStruct](./figures/build_after_init_m.png)
 
 La commande serve permet de visualiser uniquement le résultat de la page principale associé au fichier index.md de départ. Pour visualiser le résultat des sous-pages, il est nécessaire de créer des liens depuis la page principale vers les sous-pages.
 
