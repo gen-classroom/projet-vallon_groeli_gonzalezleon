@@ -11,7 +11,6 @@ import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api.MdAPI;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api.TemplateHTML;
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.util.Util;
 import org.apache.commons.io.FileUtils;
-import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +21,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BuildTest {
 
@@ -91,7 +91,7 @@ class BuildTest {
       content = content.replace("\n", "").replace("\r", "");
       String expectedContent =
               "<html lang=\"FR\">\n<head>\n<meta charset=\"UTF-8\">\n<title> My statique website | Mon premier " +
-              "article </title>\n</head>\n<body>\n{%include menu.html}\n<h1>Mon premier article</h1>\n<h2>Mon " +
+              "article </title>\n</head>\n<body>\n<h1>Mon premier article</h1>\n<h2>Mon " +
               "sous-titre</h2>\n<p>Le contenu de mon article.</p>\n\n</body>\n</html>";
       expectedContent = expectedContent.replace("\n", "").replace("\r", "");
       assertEquals(expectedContent, content);
@@ -110,7 +110,7 @@ class BuildTest {
       content = content.replace("\n", "").replace("\r", "");
       String expectedContent =
               "<html lang=\"FR\">\n<head>\n<meta charset=\"UTF-8\">\n<title> My statique website | Mon premier " +
-              "article </title>\n</head>\n<body>\n{%include menu.html}\n<h1>Mon premier article</h1>\n<h2>Mon " +
+              "article </title>\n</head>\n<body>\n<h1>Mon premier article</h1>\n<h2>Mon " +
               "sous-titre</h2>\n<p>Le contenu de mon article.</p>\n\n</body>\n</html>";
       expectedContent = expectedContent.replace("\n", "").replace("\r", "");
       assertEquals(expectedContent, content);
@@ -133,7 +133,7 @@ class BuildTest {
               new OutputStreamWriter(new FileOutputStream(mdFileSub), StandardCharsets.UTF_8)));
 
       File buildDirectory = new File(testDirectory + "\\build");
-      new CommandLine(new Statique()).execute("build","-p=/tmp/workspace");
+      new CommandLine(new Statique()).execute("build", "-p=/tmp/workspace");
 
       File subHtmlFile = new File(buildDirectory.getPath() + "/tmpDir/test.html");
       assertTrue(subHtmlFile.exists());
@@ -142,8 +142,7 @@ class BuildTest {
       content = content.replace("\n", "").replace("\r", "");
       String expectedContent =
               "<html lang=\"FR\">\n<head>\n<meta charset=\"UTF-8\">\n<title> My statique website | Mon premier " +
-              "article </title>\n</head>\n<body>\n{%include menu" +
-              ".html}\n<h1>Test</h1>\n<h2>esperons que ça marche</h2>\n\n</body>\n</html>";
+              "article </title>\n</head>\n<body>\n<h1>Test</h1>\n<h2>esperons que ça marche</h2>\n\n</body>\n</html>";
       expectedContent = expectedContent.replace("\n", "").replace("\r", "");
       assertEquals(expectedContent, content);
       File transferedImages = new File(buildDirectory.getPath() + "/tmpDir/image.png");

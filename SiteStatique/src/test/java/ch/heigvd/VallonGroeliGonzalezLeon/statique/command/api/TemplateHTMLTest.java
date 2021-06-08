@@ -53,7 +53,6 @@ class TemplateHTMLTest {
                         "<title> My statique website | Mon premier article </title>\n" +
                         "</head>\n" +
                         "<body>\n" +
-                        "{%include menu.html}\n" +
                         "<h1>Mon premier article</h1>\n" +
                         "<h2>Mon sous-titre</h2>\n" +
                         "<p>Le contenu de mon article.</p>\n" +
