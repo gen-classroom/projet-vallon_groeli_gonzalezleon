@@ -19,7 +19,7 @@ Passer ensuite dans powershell et exécuter la commande suivante :
 
 Il est possible d'ajouter directement cette adresse dans le PATH de votre pc pour ne plus avoir besoin d'effectuer à chaque fois cette partie.
 
-L'application peut maintenant être appelée avec statique.bat.
+**L'application peut maintenant être appelée avec `statique.bat` sur powershell ou simplement `statique` sur bash.**
 
 
 
@@ -48,11 +48,11 @@ Un exemple d'utilisation de l'application est le suivant :
 
 Résultat obtenu dans le terminal Window :
 
-![image-20210604113758748](C:\Users\jaden\AppData\Roaming\Typora\typora-user-images\image-20210604113758748.png)
+![templateStruct](./figures_user_manual/command_init.png)
 
 Dans le répertoire /mon/site on obtient le résultat suivant :
 
-![image-20210604113925125](C:\Users\jaden\AppData\Roaming\Typora\typora-user-images\image-20210604113925125.png)
+![templateStruct](./figures_user_manual/rep_depart.png)
 
 Le dossier template contient le fichier layout.html.
 
@@ -60,21 +60,21 @@ Le dossier template contient le fichier layout.html.
 
 Dans l'exemple qui suit on modifie le fichier index.md. Se référer à la section plus bas pour les différents fichiers modifiables et les différentes parties du fichier qui sont modifiables par l'utilisateur. 
 
-![image-20210604114430688](C:\Users\jaden\AppData\Roaming\Typora\typora-user-images\image-20210604114430688.png)
+![templateStruct](./figures_user_manual/index_modif.png)
 
 3. Construire le site en utilisant la commande `statique build`. Le document html index.html créé sera placé dans un dossier build lui aussi nouvellement créé.
 
-![image-20210604114544820](C:\Users\jaden\AppData\Roaming\Typora\typora-user-images\image-20210604114544820.png)
+![templateStruct](./figures_user_manual/command_build.png)
 
 On obtient donc le répertoire suivant :
 
-![image-20210608095001578](C:\Users\jaden\AppData\Roaming\Typora\typora-user-images\image-20210608095001578.png)
+![templateStruct](./figures_user_manual/rep_after_build.png)
 
 
 
 4. Visualiser le résultat dans le navigateur web par défaut avec la commande *statique serve*, pour observer le résultat final après avoir effectué d'éventuelles modifications :
 
-![image-20210608104349523](C:\Users\jaden\AppData\Roaming\Typora\typora-user-images\image-20210608104349523.png)
+![templateStruct](./figures_user_manual/res_serve.png)
 
 
 
@@ -83,15 +83,15 @@ On obtient donc le répertoire suivant :
 
 Après avoir exécuté la commande :
 
-![image-20210608105300236](C:\Users\jaden\AppData\Roaming\Typora\typora-user-images\image-20210608105300236.png)
+![templateStruct](./figures_user_manual/command_init_m.png)
 
 On obtient le projet suivant :
 
-![image-20210608102854176](C:\Users\jaden\AppData\Roaming\Typora\typora-user-images\image-20210608102854176.png)
+![templateStruct](./figures_user_manual/rep_after_init_m.png)
 
 Dans le dossier build on obtient un nouveau dossier contenant la page html :
 
-![image-20210608102922850](C:\Users\jaden\AppData\Roaming\Typora\typora-user-images\image-20210608102922850.png)
+![templateStruct](./figures_user_manual/build_after_init_m.png)
 
 La commande serve permet de visualiser uniquement le résultat de la page principale associé au fichier index.md de départ. Pour visualiser le résultat des sous-pages, il est nécessaire de créer des liens depuis la page principale vers les sous-pages.
 
