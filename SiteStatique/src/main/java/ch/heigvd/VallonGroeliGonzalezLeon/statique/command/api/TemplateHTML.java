@@ -57,7 +57,7 @@ public class TemplateHTML {
       }
       String defaultContent = "<html lang=\"{{{language}}}\">\n<head>\n<meta charset=\"{{{charset}}}\">" +
                               "\n<title> {{{siteTitle}}} | {{{pageTitle}}} </title>\n</head>\n<body>\n" +
-                              "{%include menu.html}\n{{{content}}}\n</body>\n</html>";
+                              "{{{content}}}\n</body>\n</html>";
       try (FileWriter writer = new FileWriter(emptyFile)) {
          Util.writeFile(defaultContent, writer);
       }
