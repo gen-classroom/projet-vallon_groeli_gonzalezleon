@@ -1,8 +1,9 @@
-package ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api;/*
+/*
  * @File MdAPITest.java
- * @Authors : David González León
+ * @Authors : David González León, Jade Gröli, Axel Vallon
  * @Date 19 mars 2021
  */
+package ch.heigvd.VallonGroeliGonzalezLeon.statique.command.api;
 
 import ch.heigvd.VallonGroeliGonzalezLeon.statique.util.Util;
 import org.apache.commons.io.FileUtils;
