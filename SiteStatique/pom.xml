@@ -70,7 +70,7 @@
                 <version>0.8.7</version>
                 <configuration>
                     <excludes>
-                        <exclude>**/benchmark/*</exclude>
+                        <exclude>**/benchmark*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
